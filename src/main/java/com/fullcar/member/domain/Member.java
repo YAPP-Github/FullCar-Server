@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,8 @@ public class Member {
 
     private String company;
 
+    @Length(min=2, max=10)
+    @Column(length = 10)
     private String nickname;
 
     private String email;
@@ -44,7 +47,7 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "fcm_token")
+    @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
 
     @Column(name = "created_at")
