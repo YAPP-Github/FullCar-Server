@@ -24,7 +24,7 @@ public class SnowFlake {
     private volatile long sequence = 0L;
 
     // Create SequenceGenerator with a nodeId
-    public SnowFlake(long nodeId, long customEpoch) {
+    public SnowFlake (long nodeId, long customEpoch) {
         if(nodeId < 0 || nodeId > maxNodeId) {
             throw new IllegalArgumentException(String.format("NodeId must be between %d and %d", 0, maxNodeId));
         }
@@ -33,7 +33,7 @@ public class SnowFlake {
     }
 
     // Create Snowflake with a nodeId
-    public SnowFlake(long nodeId) {
+    public SnowFlake (long nodeId) {
         this(nodeId, DEFAULT_CUSTOM_EPOCH);
     }
 
@@ -75,7 +75,7 @@ public class SnowFlake {
     }
 
     // Block and wait till next millisecond
-    private long waitNextMillis(long currentTimestamp) {
+    private long waitNextMillis (long currentTimestamp) {
         while (currentTimestamp == lastTimestamp) {
             currentTimestamp = timestamp();
         }
@@ -104,7 +104,7 @@ public class SnowFlake {
         return nodeId;
     }
 
-    public long[] parse(long id) {
+    public long[] parse (long id) {
         long maskNodeId = ((1L << NODE_ID_BITS) - 1) << SEQUENCE_BITS;
         long maskSequence = (1L << SEQUENCE_BITS) - 1;
 
@@ -112,7 +112,7 @@ public class SnowFlake {
         long nodeId = (id & maskNodeId) >> SEQUENCE_BITS;
         long sequence = id & maskSequence;
 
-        return new long[]{timestamp, nodeId, sequence};
+        return new long[] {timestamp, nodeId, sequence};
     }
 
     @Override
