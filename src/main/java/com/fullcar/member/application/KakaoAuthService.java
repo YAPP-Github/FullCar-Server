@@ -106,7 +106,7 @@ public class KakaoAuthService implements AuthService {
 }
 
     private Member findMemberByClientId(long clientId) {
-        return memberRepository.findByClientId(clientId)
+        return memberRepository.findByClientIdAndIsDeleted(clientId, false)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_MEMBER));
     }
 
