@@ -42,10 +42,12 @@ public class Member {
 
     private String ageRange;
 
-    private boolean flag;
+    @Builder.Default
+    private boolean flag = false;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @Builder.Default
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 
     @Column(name = "refresh_token")
     private String refreshToken;

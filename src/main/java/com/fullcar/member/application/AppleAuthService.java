@@ -72,8 +72,6 @@ public class AppleAuthService implements AuthService {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
                 .socialId(socialId)
-                .flag(false)
-                .isDeleted(false)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build());

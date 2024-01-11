@@ -94,8 +94,6 @@ public class KakaoAuthService implements AuthService {
                 .socialId(socialIdService.generateSocialId(kakaoInfoDto.getSocialId()))
                 .gender(kakaoInfoDto.getGender())
                 .ageRange(kakaoInfoDto.getAgeRange())
-                .flag(false)
-                .isDeleted(false)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build());
