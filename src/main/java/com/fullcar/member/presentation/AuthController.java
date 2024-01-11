@@ -6,6 +6,7 @@ import com.fullcar.member.application.AuthService;
 import com.fullcar.member.application.AuthServiceProvider;
 import com.fullcar.member.presentation.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.dto.response.AuthResponseDto;
+import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,8 @@ public class AuthController {
     public ApiResponse<AuthResponseDto> socialLogin(@RequestBody AuthRequestDto authRequestDto) {
 
         AuthService authService = authServiceProvider.getAuthService(authRequestDto.getSocialType());
-        AuthResponseDto responseDto = authService.socialLogin(authRequestDto);
+        SocialInfoResponseDto socialResponseDto = authService.getMemberInfo(authRequestDto);
+        AuthResponseDto responseDto = authServiceProvider.socialLogin(socialResponseDto);
 
         return ApiResponse.success(SuccessCode.SIGNIN_SUCCESS, responseDto);
     }

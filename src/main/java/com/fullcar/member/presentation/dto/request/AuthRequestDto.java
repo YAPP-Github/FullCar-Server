@@ -12,6 +12,6 @@ import static lombok.AccessLevel.PROTECTED;
 public class AuthRequestDto {
 
     private MemberSocialType socialType;
-    private String accessToken;
+    private String token;
     private String fcmToken;
 }

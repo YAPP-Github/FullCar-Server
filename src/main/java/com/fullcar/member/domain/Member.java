@@ -28,7 +28,7 @@ public class Member {
     @EmbeddedId
     private MemberId id;
 
-    private long clientId;
+    private String socialId;
 
     private String company;
 
@@ -60,4 +60,9 @@ public class Member {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void loginMember(String fcmToken, String refreshToken) {
+        this.fcmToken = fcmToken;
+        this.refreshToken = refreshToken;
+    }
 }
