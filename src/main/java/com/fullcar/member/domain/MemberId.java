@@ -15,6 +15,6 @@ import static lombok.AccessLevel.PROTECTED;
 public class MemberId implements Serializable {
 
     @Column(name = "id")
-    private long id;
+    private Long id;
 
 }
