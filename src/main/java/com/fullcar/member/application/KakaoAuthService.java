@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberIdService;
-import com.fullcar.member.domain.MemberRepository;
+import com.fullcar.member.domain.*;
 import com.fullcar.member.presentation.dto.KakaoInfoDto;
 import com.fullcar.member.presentation.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
@@ -34,13 +32,14 @@ public class KakaoAuthService implements AuthService {
 
     private final MemberRepository memberRepository;
     private final MemberIdService memberIdService;
+    private final SocialIdService socialIdService;
 
     @Override
     @Transactional
     public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
         String deviceToken = authRequestDto.getDeviceToken();
         KakaoInfoDto kakaoInfoDto = getKakaoData(authRequestDto.getToken());
-        String socialId = kakaoInfoDto.getSocialId();
+        SocialId socialId = socialIdService.generateSocialId(kakaoInfoDto.getSocialId());
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
@@ -92,7 +91,7 @@ public class KakaoAuthService implements AuthService {
     private void createMember(KakaoInfoDto kakaoInfoDto, String deviceToken, String refreshToken) {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
-                .socialId(kakaoInfoDto.getSocialId())
+                .socialId(socialIdService.generateSocialId(kakaoInfoDto.getSocialId()))
                 .gender(kakaoInfoDto.getGender())
                 .ageRange(kakaoInfoDto.getAgeRange())
                 .flag(false)

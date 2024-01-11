@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, MemberId> {
-    Member findBySocialIdAndIsDeleted(String socialId, boolean isDeleted);
+    Member findBySocialIdAndIsDeleted(SocialId socialId, boolean isDeleted);
 
-    boolean existsBySocialId(String socialId);
+    boolean existsBySocialId(SocialId socialId);
 }

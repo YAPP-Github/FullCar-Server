@@ -6,9 +6,7 @@ import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.BadRequestException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberIdService;
-import com.fullcar.member.domain.MemberRepository;
+import com.fullcar.member.domain.*;
 import com.fullcar.member.presentation.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
 import io.jsonwebtoken.*;
@@ -39,6 +37,7 @@ public class AppleAuthService implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final MemberIdService memberIdService;
+    private final SocialIdService socialIdService;
     private final AppleProperties appleProperties;
 
     @Override
@@ -54,24 +53,25 @@ public class AppleAuthService implements AuthService {
         validateClaims(claims);
 
         String sub = claims.getSubject();
+        SocialId socialId = socialIdService.generateSocialId(sub);
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
-        if (memberRepository.existsBySocialId(sub)) {
-            memberRepository.findBySocialIdAndIsDeleted(sub, false).loginMember(deviceToken, refreshToken);
+        if (memberRepository.existsBySocialId(socialId)) {
+            memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
         }
-        else createMember(sub, deviceToken, refreshToken);
+        else createMember(socialId, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
-                .socialId(sub)
+                .socialId(socialId)
                 .refreshToken(refreshToken)
                 .build();
     }
 
     // 새로운 멤버 생성
-    private void createMember(String sub, String deviceToken, String refreshToken) {
+    private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
-                .socialId(sub)
+                .socialId(socialId)
                 .flag(false)
                 .isDeleted(false)
                 .deviceToken(deviceToken)

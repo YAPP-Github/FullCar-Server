@@ -28,7 +28,7 @@ public class Member {
     @EmbeddedId
     private MemberId id;
 
-    private String socialId;
+    private SocialId socialId;
 
     private String company;
 

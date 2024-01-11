@@ -1,11 +1,12 @@
 package com.fullcar.member.presentation.dto.response;
 
+import com.fullcar.member.domain.SocialId;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class SocialInfoResponseDto {
-    private String socialId;
+    private SocialId socialId;
     private String refreshToken;
 }
