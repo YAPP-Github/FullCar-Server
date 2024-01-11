@@ -44,7 +44,7 @@ public class AppleAuthService implements AuthService {
     @Override
     @Transactional
     public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
-        String fcmToken = authRequestDto.getFcmToken();
+        String deviceToken = authRequestDto.getDeviceToken();
         String idToken = authRequestDto.getToken();
         Map<String, String> headers = parseHeaders(idToken);
         ApplePublicKeyList applePublicKeys = getApplePublicKeyList();
@@ -57,9 +57,9 @@ public class AppleAuthService implements AuthService {
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         if (memberRepository.existsBySocialId(sub)) {
-            memberRepository.findBySocialIdAndIsDeleted(sub, false).loginMember(fcmToken, refreshToken);
+            memberRepository.findBySocialIdAndIsDeleted(sub, false).loginMember(deviceToken, refreshToken);
         }
-        else createMember(sub, fcmToken, refreshToken);
+        else createMember(sub, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(sub)
@@ -68,13 +68,13 @@ public class AppleAuthService implements AuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(String sub, String fcmToken, String refreshToken) {
+    private void createMember(String sub, String deviceToken, String refreshToken) {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
                 .socialId(sub)
                 .flag(false)
                 .isDeleted(false)
-                .fcmToken(fcmToken)
+                .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build());
     }

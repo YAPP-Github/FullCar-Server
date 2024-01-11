@@ -13,5 +13,5 @@ public class AuthRequestDto {
 
     private MemberSocialType socialType;
     private String token;
-    private String fcmToken;
+    private String deviceToken;
 }

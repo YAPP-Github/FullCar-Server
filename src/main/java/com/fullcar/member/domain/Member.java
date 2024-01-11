@@ -50,8 +50,8 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "fcm_token", nullable = false)
-    private String fcmToken;
+    @Column(name = "device_token", nullable = false)
+    private String deviceToken;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -61,8 +61,8 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void loginMember(String fcmToken, String refreshToken) {
-        this.fcmToken = fcmToken;
+    public void loginMember(String deviceToken, String refreshToken) {
+        this.deviceToken = deviceToken;
         this.refreshToken = refreshToken;
     }
 }

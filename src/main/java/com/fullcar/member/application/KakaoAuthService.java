@@ -38,14 +38,13 @@ public class KakaoAuthService implements AuthService {
     @Override
     @Transactional
     public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
-        String fcmToken = authRequestDto.getFcmToken();
+        String deviceToken = authRequestDto.getDeviceToken();
         KakaoInfoDto kakaoInfoDto = getKakaoData(authRequestDto.getToken());
         String socialId = kakaoInfoDto.getSocialId();
-        System.out.println(socialId);
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
-        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(fcmToken, refreshToken);
-        else createMember(kakaoInfoDto, fcmToken, refreshToken);
+        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
+        else createMember(kakaoInfoDto, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(socialId)
@@ -90,7 +89,7 @@ public class KakaoAuthService implements AuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(KakaoInfoDto kakaoInfoDto, String fcmToken, String refreshToken) {
+    private void createMember(KakaoInfoDto kakaoInfoDto, String deviceToken, String refreshToken) {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
                 .socialId(kakaoInfoDto.getSocialId())
@@ -98,7 +97,7 @@ public class KakaoAuthService implements AuthService {
                 .ageRange(kakaoInfoDto.getAgeRange())
                 .flag(false)
                 .isDeleted(false)
-                .fcmToken(fcmToken)
+                .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build());
     }
