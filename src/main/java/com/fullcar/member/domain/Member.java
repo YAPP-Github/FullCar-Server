@@ -1,9 +1,6 @@
 package com.fullcar.member.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,12 +34,13 @@ public class Member {
     private String nickname;
 
     private String email;
-
+    
     private String gender;
 
     private String ageRange;
 
     @Builder.Default
+    @Column(name = "onboarding_flag")
     private boolean flag = false;
 
     @Builder.Default
