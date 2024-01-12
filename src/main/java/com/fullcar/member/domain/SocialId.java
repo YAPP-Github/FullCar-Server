@@ -5,16 +5,15 @@ import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Embeddable
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class MemberId implements Serializable {
+public class SocialId {
 
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "social_id")
+    private String socialId;
 
 }

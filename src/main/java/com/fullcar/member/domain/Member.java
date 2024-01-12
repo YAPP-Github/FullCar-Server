@@ -1,9 +1,6 @@
 package com.fullcar.member.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +25,7 @@ public class Member {
     @EmbeddedId
     private MemberId id;
 
-    private long clientId;
+    private SocialId socialId;
 
     private String company;
 
@@ -37,21 +34,24 @@ public class Member {
     private String nickname;
 
     private String email;
-
+    
     private String gender;
 
     private String ageRange;
 
-    private boolean flag;
+    @Builder.Default
+    @Column(name = "onboarding_flag")
+    private boolean flag = false;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @Builder.Default
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "fcm_token", nullable = false)
-    private String fcmToken;
+    @Column(name = "device_token", nullable = false)
+    private String deviceToken;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -60,4 +60,9 @@ public class Member {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void loginMember(String deviceToken, String refreshToken) {
+        this.deviceToken = deviceToken;
+        this.refreshToken = refreshToken;
+    }
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class KakaoInfoDto {
-    private long clientId;
+    private String socialId;
 
     private String gender;
 
