@@ -24,7 +24,18 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/v1/auth",
+            "/api/v1/auth/**",
+            "/api/v1/test/**",
+
+            "/configuration/ui",
+            "/configuration/security",
+            "/webjars/**",
+            "/swagger/**",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+
+            "/health-check"
     };
 
     @Bean
