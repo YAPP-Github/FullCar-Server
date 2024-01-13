@@ -1,4 +1,4 @@
-package com.fullcar.member.domain;
+package com.fullcar.core.id;
 
 import java.net.NetworkInterface;
 import java.security.SecureRandom;
