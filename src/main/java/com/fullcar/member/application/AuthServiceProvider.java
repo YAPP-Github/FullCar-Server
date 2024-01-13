@@ -6,6 +6,7 @@ import com.fullcar.member.domain.Member;
 import com.fullcar.member.domain.MemberRepository;
 import com.fullcar.member.domain.MemberSocialType;
 import com.fullcar.member.presentation.dto.response.AuthResponseDto;
+import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,13 @@ public class AuthServiceProvider {
                 .flag(member.isFlag())
                 .accessToken(accessToken)
                 .refreshToken(socialResponseDto.getRefreshToken())
+                .build();
+    }
+
+    public AuthTokenResponseDto getNewToken(String accessToken, String refreshToken) {
+        return AuthTokenResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
     }
 }

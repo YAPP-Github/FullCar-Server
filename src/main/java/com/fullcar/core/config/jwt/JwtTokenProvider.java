@@ -1,5 +1,7 @@
 package com.fullcar.core.config.jwt;
 
+import com.fullcar.member.domain.Member;
+import com.fullcar.member.domain.MemberRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -29,6 +31,7 @@ public class JwtTokenProvider {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_AUTHORIZATION_HEADER = "Refresh";
+    private final MemberRepository memberRepository;
 
     public String generateAccessToken(Authentication authentication) {
         Date now = new Date();
@@ -38,7 +41,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiration);
 
-        claims.put("memberId", authentication.getPrincipal());
+        claims.put("memberId", authentication.getName());
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -106,5 +109,9 @@ public class JwtTokenProvider {
     private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public Member findMemberByRefreshToken(String refreshToken) {
+        return memberRepository.findByRefreshTokenOrThrow(refreshToken);
     }
 }
