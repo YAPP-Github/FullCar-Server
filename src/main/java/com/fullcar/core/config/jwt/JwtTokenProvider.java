@@ -79,12 +79,6 @@ public class JwtTokenProvider {
         }
     }
 
-    public String resolveRefreshToken(HttpServletRequest request) {
-        String header = request.getHeader(REFRESH_AUTHORIZATION_HEADER);
-
-        return Objects.requireNonNullElse(header, "");
-    }
-
     // 토큰 유효성 검증
     public JwtExceptionType validateToken(String token) {
         try {
