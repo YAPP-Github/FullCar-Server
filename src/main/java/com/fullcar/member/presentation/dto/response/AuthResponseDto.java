@@ -1,5 +1,6 @@
 package com.fullcar.member.presentation.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,9 +8,12 @@ import lombok.Data;
 @Builder
 public class AuthResponseDto {
 
-    private Boolean flag;
+    @Schema(description = "멤버 온보딩 여부")
+    private Boolean onboardingFlag;
 
+    @Schema(description = "FullCar Access Token")
     private String accessToken;
 
+    @Schema(description = "FullCar Refresh Token")
     private String refreshToken;
 }

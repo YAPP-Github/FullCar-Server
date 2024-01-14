@@ -9,6 +9,10 @@ import com.fullcar.member.presentation.dto.request.AuthTokenRequestDto;
 import com.fullcar.member.presentation.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +21,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Tag(name = "[Auth] 인증/인가 관련 API")
 public class AuthController {
     private final AuthServiceProvider authServiceProvider;
 
+    @Operation(summary = "소셜 로그인 API")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "소셜로그인 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "애플 공개키 생성 중 문제 발생", content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "유효하지 않은 카카오 토큰", content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
     @PostMapping()
     public ApiResponse<AuthResponseDto> socialLogin(@RequestBody AuthRequestDto authRequestDto) {
 
@@ -30,6 +42,12 @@ public class AuthController {
         return ApiResponse.success(SuccessCode.SIGNIN_SUCCESS, responseDto);
     }
 
+    @Operation(summary = "토큰 재발급 API")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "1. access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다. \t\n 2. 유효하지 않은 토큰", content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
     @GetMapping("/token")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AuthTokenResponseDto> getNewToken(@RequestBody AuthTokenRequestDto authTokenRequestDto) {
