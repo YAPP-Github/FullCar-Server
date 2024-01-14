@@ -9,7 +9,7 @@ import lombok.Data;
 public class AuthResponseDto {
 
     @Schema(description = "멤버 온보딩 여부")
-    private Boolean onboardingFlag;
+    private Boolean onBoardingFlag;
 
     @Schema(description = "FullCar Access Token")
     private String accessToken;
