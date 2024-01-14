@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,6 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // 토큰 검증
                 if (jwtException == JwtExceptionType.VALID_JWT_TOKEN) {
                     setAuthentication(accessToken);
+                } else if (jwtException == JwtExceptionType.EXPIRED_JWT_TOKEN) {
+                    jwtAuthenticationEntryPoint.setResponse(response, HttpStatus.UNAUTHORIZED, ErrorCode.EXPIRED_TOKEN);
+                    return;
                 }
             }
         } catch (Exception e) {
@@ -39,8 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void setAuthentication(String token) {
         Claims claims = jwtTokenProvider.getAccessTokenPayload(token);
-        Authentication authentication = new UserAuthentication(Long.valueOf(String.valueOf(claims.get("memberId"))), null, null);
+        Authentication authentication = new UserAuthentication(claims.get("memberId"), null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println(Long.valueOf(String.valueOf(claims.get("memberId"))));
     }
 }

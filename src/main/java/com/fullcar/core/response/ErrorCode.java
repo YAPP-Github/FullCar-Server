@@ -17,11 +17,12 @@ public enum ErrorCode {
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),
     UNAUTHORIZED_TOKEN(UNAUTHORIZED,"유효하지 않은 토큰"),
-    EXPIRED_TOKEN(UNAUTHORIZED, "만료된 토큰"),
+    EXPIRED_TOKEN(UNAUTHORIZED, "만료된 accessToken 입니다."),
     INVALID_CLAIMS(UNAUTHORIZED, "올바르지 않은 Claim"),
+    SIGNIN_REQUIRED(UNAUTHORIZED, "access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다."),
+    INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저");
 
     /* 404 NOT FOUND */
-    NOT_FOUND_MEMBER(BAD_REQUEST, "존재하지 않는 유저");
 
     private final HttpStatus status;
     private final String message;

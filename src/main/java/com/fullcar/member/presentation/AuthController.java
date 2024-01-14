@@ -5,13 +5,13 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.AuthService;
 import com.fullcar.member.application.AuthServiceProvider;
 import com.fullcar.member.presentation.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.dto.request.AuthTokenRequestDto;
 import com.fullcar.member.presentation.dto.response.AuthResponseDto;
+import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -28,5 +28,11 @@ public class AuthController {
         AuthResponseDto responseDto = authServiceProvider.socialLogin(socialResponseDto);
 
         return ApiResponse.success(SuccessCode.SIGNIN_SUCCESS, responseDto);
+    }
+
+    @GetMapping("/token")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<AuthTokenResponseDto> getNewToken(@RequestBody AuthTokenRequestDto authTokenRequestDto) {
+        return ApiResponse.success(SuccessCode.GET_NEW_TOKEN_SUCCESS, authServiceProvider.getNewToken(authTokenRequestDto.getRefreshToken()));
     }
 }

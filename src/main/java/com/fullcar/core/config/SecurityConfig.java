@@ -13,9 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static jakarta.servlet.DispatcherType.ERROR;
-import static jakarta.servlet.DispatcherType.FORWARD;
-
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -49,7 +46,6 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests((authorizeRequests) -> {
-                    authorizeRequests.dispatcherTypeMatchers(FORWARD, ERROR).permitAll();
                     authorizeRequests.requestMatchers(AUTH_WHITELIST).permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })

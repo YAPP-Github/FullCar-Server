@@ -1,9 +1,11 @@
 package com.fullcar.core.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@Builder
 public class ApiResponse<T> {
     private final int status;
     private final String message;
