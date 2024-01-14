@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private static final String[] AUTH_WHITELIST = {
-            "/api/v1/auth"
+            "/api/v1/auth/**"
     };
 
     @Bean

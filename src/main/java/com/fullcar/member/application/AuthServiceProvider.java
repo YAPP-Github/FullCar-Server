@@ -1,7 +1,12 @@
 package com.fullcar.member.application;
 
+import com.fullcar.core.config.jwt.JwtExceptionType;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.config.jwt.UserAuthentication;
+import com.fullcar.core.exception.BadRequestException;
+import com.fullcar.core.exception.CustomException;
+import com.fullcar.core.exception.UnauthorizedException;
+import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.Member;
 import com.fullcar.member.domain.MemberRepository;
 import com.fullcar.member.domain.MemberSocialType;
@@ -9,9 +14,12 @@ import com.fullcar.member.presentation.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,9 +57,20 @@ public class AuthServiceProvider {
                 .build();
     }
 
-    public AuthTokenResponseDto getNewToken(String accessToken, String refreshToken) {
+    public AuthTokenResponseDto getNewToken(String refreshToken) {
+        // refresh 만료
+        if (jwtTokenProvider.validateToken(refreshToken) == JwtExceptionType.EXPIRED_JWT_TOKEN) {
+            throw new CustomException(ErrorCode.SIGNIN_REQUIRED);
+        }
+
+        // 해당 refreshToken을 가진 멤버가 존재하는지 확인
+        Member member = memberRepository.findByRefreshTokenOrThrow(refreshToken);
+
+        Authentication authentication = new UserAuthentication(member.getId(), null, null);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
+
         return AuthTokenResponseDto.builder()
-                .accessToken(accessToken)
+                .accessToken(newAccessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
