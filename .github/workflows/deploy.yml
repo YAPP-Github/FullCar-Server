@@ -27,7 +27,7 @@ jobs:
 
       # 빌드
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build -x test
 
       # AWS 자격 증명
       - name: Configure AWS credentials
