@@ -45,10 +45,10 @@ public class AuthController {
     @Operation(summary = "토큰 재발급 API")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "1. access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다. \t\n 2. 유효하지 않은 토큰", content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "1. access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다. \t\n 2. 유효하지 않은 토큰 (DB의 refreshToken과 일치하지 않을 경우)", content = @Content),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
-    @GetMapping("/token")
+    @PostMapping("/token")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AuthTokenResponseDto> getNewToken(@RequestBody AuthTokenRequestDto authTokenRequestDto) {
         return ApiResponse.success(SuccessCode.GET_NEW_TOKEN_SUCCESS, authServiceProvider.getNewToken(authTokenRequestDto.getRefreshToken()));
