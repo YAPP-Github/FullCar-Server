@@ -36,7 +36,8 @@ public class Carpool {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "carpool_state")
-    private CarpoolState carpoolState;
+    @Builder.Default
+    private CarpoolState carpoolState = CarpoolState.OPEN;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "mood_type")
