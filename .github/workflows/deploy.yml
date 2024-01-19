@@ -29,10 +29,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # zip 파일로 압축
-      - name: zip file
-        run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
-
       # AWS 자격 증명
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -62,6 +58,10 @@ jobs:
           echo "docker rmi $ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker pull $ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker run -d --name codedeploy -p 8080:80 --restart always $ECR_REPOSITORY" >> scripts/deploy.sh
+
+      # zip 파일로 압축
+      - name: zip file
+        run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
 
       # S3에 업로드
       - name: Upload to s3
