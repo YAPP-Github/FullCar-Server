@@ -55,4 +55,16 @@ jobs:
         run: |
           docker buildx build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
+
+      # S3에 업로드
+      - name: Upload to s3
+        run:
+          aws s3 cp --region ap-northeast-2 ./fullcar.zip s3://fullcar-build/deploy/
+
+      # Deploy 시작
+      - name: Deploy with AWS codeDeploy
+        run: |
+            aws deploy create-deployment --application-name fullcar-codedeploy
+            --deployment-config-name CodeDeployDefault.OneAtATime
+            --deployment-group-name DEPLOY-GROUP
+            --s3-location bucket=fullcar-build,bundleType=zip,key=deploy/fullcar.zip
