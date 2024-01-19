@@ -61,7 +61,7 @@ jobs:
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker pull $ECR_REPOSITORY" >> scripts/deploy.sh
-          echo "docker run -d --name codedeploy -p 8080:80 --restart always "$ECR_REPOSITORY" >> scripts/deploy.sh
+          echo "docker run -d --name codedeploy -p 8080:80 --restart always $ECR_REPOSITORY" >> scripts/deploy.sh
 
       # S3에 업로드
       - name: Upload to s3
