@@ -29,6 +29,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
+      # zip 파일로 압축
+      - name: zip file
+        run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
+
       # AWS 자격 증명
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -48,8 +52,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker buildx build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY 
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY"
