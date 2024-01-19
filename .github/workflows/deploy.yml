@@ -57,7 +57,7 @@ jobs:
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
-          echo "docker run -d --name codedeploy -p 8080:80 --restart always $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
+          echo "docker run -d --name codedeploy -p 8080:8080 --restart always $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
 
       # zip 파일로 압축
       - name: zip file
