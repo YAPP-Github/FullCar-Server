@@ -55,6 +55,13 @@ jobs:
         run: |
           docker buildx build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          mkdir scripts
+          touch scripts/deploy.sh
+          echo "aws ecr get-login --region ap-northeast-2 --no-include-email" >> scripts/deploy.sh
+          echo "docker rm -f codedeploy" >> scripts/deploy.sh
+          echo "docker rmi $ECR_REPOSITORY" >> scripts/deploy.sh
+          echo "docker pull $ECR_REPOSITORY" >> scripts/deploy.sh
+          echo "docker run -d --name codedeploy -p 8080:80 --restart always "$ECR_REPOSITORY" >> scripts/deploy.sh
 
       # S3에 업로드
       - name: Upload to s3
