@@ -38,7 +38,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiration);
 
-        claims.put("memberId", authentication.getPrincipal());
+        claims.put("memberId", authentication.getName());
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -77,12 +77,6 @@ public class JwtTokenProvider {
         } else {
             return header.split(" ")[1];
         }
-    }
-
-    public String resolveRefreshToken(HttpServletRequest request) {
-        String header = request.getHeader(REFRESH_AUTHORIZATION_HEADER);
-
-        return Objects.requireNonNullElse(header, "");
     }
 
     // 토큰 유효성 검증
