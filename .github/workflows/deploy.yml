@@ -61,12 +61,13 @@ jobs:
         run: |
           docker build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          
           mkdir scripts
           touch scripts/deploy.sh
           echo "aws ecr get-login-password --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+          echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
-          echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker run -d --name codedeploy -p 8080:8080 --restart always $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
 
       # zip 파일로 압축
