@@ -24,8 +24,8 @@ jobs:
       # 환경 변수 설정
       - name: Set up Environment
         run: |
-          cd ./src/main/resources
-          touch ./application.yml
+          mkdir ./src/main/resources
+          touch ./src/main/resources/application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
 
       # 빌드 권한 부여
