@@ -23,12 +23,13 @@ jobs:
 
       # 환경 변수 설정
       - name: Set up Environment
-        working-directory: ./
+        working-directory: ./src/main
         run: |
-          pwd
-          touch .env
-          echo "${{ secrets.APPLICATION_YML }}" >> .env
-          cat .env
+          mkdir ./resources
+          cd ./resources
+          touch ./application.yml
+          echo "${{ secrets.APPLICATION_YML }}" >> ./application.yml
+          cat ./application.yml
 
       # 빌드 권한 부여
       - name: Grant execute permission for gradlew
@@ -70,7 +71,7 @@ jobs:
 
       # zip 파일로 압축
       - name: zip file
-        run: zip -r fullcar.zip ./scripts ./appspec.yml ./.env ./build/libs/*.jar
+        run: zip -r fullcar.zip ./scripts ./appspec.yml ./src/main/resources/application.yml ./build/libs/*.jar
 
       # S3에 업로드
       - name: Upload to s3
