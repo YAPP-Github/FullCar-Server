@@ -71,7 +71,7 @@ jobs:
 
       # zip 파일로 압축
       - name: zip file
-        run: zip -r fullcar.zip ./scripts ./appspec.yml ./src/main/resources/application.yml ./build/libs/*.jar
+        run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
 
       # S3에 업로드
       - name: Upload to s3
