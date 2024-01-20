@@ -47,8 +47,7 @@ public class AuthServiceProvider {
     public AuthResponseDto socialLogin(SocialInfoResponseDto socialResponseDto) {
 
         Member member = memberRepository.findBySocialIdAndIsDeleted(socialResponseDto.getSocialId(), false);
-        Authentication authentication = new UserAuthentication(member.getId(), null, null);
-        String accessToken = jwtTokenProvider.generateAccessToken(authentication);
+        String accessToken = jwtTokenProvider.generateAccessToken(member);
 
         return AuthResponseDto.builder()
                 .onBoardingFlag(member.isFlag())
@@ -65,9 +64,7 @@ public class AuthServiceProvider {
 
         // 해당 refreshToken을 가진 멤버가 존재하는지 확인
         Member member = memberRepository.findByRefreshTokenOrThrow(refreshToken);
-
-        Authentication authentication = new UserAuthentication(member.getId(), null, null);
-        String newAccessToken = jwtTokenProvider.generateAccessToken(authentication);
+        String newAccessToken = jwtTokenProvider.generateAccessToken(member);
 
         return AuthTokenResponseDto.builder()
                 .accessToken(newAccessToken)

@@ -1,6 +1,5 @@
 package com.fullcar.carpool.domain;
 
-import com.fullcar.member.domain.MemberId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

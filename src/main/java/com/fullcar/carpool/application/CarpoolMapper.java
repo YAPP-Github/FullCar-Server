@@ -17,6 +17,7 @@ public class CarpoolMapper {
 
     public CarpoolDto toDto(Carpool carpool) {
         return CarpoolDto.builder()
+                .id(carpool.getCarpoolId().getId())
                 .pickupLocation(carpool.getPickupLocation())
                 .periodType(carpool.getCost().getPeriodType())
                 .money(carpool.getCost().getMoney())

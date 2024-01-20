@@ -1,6 +1,7 @@
 package com.fullcar.carpool.presentation.dto;
 
 import com.fullcar.carpool.domain.Carpool;
+import com.fullcar.carpool.domain.CarpoolId;
 import com.fullcar.carpool.domain.MoodType;
 import com.fullcar.carpool.domain.PeriodType;
 import com.fullcar.carpool.domain.service.CarpoolIdService;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(description = "카풀 모델")
 public class CarpoolDto {
+
+    @Schema(description = "카풀 id")
+    private Long id;
 
     @Schema(description = "픽업장소")
     private String pickupLocation;

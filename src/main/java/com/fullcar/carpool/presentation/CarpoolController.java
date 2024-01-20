@@ -27,10 +27,10 @@ public class CarpoolController {
 
     @Operation(description = "카풀 등록")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "등록 성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "등록 성공")
     })
     @PostMapping("")
-    public ApiResponse<CarpoolDto> postGroupAlbum(
+    public ApiResponse<CarpoolDto> postCarpool(
             @Parameter(hidden = true)
             @CurrentMember Member member,
             @Parameter(description = "카풀 모델", required = true)

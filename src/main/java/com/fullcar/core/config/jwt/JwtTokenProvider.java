@@ -1,5 +1,6 @@
 package com.fullcar.core.config.jwt;
 
+import com.fullcar.member.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +31,7 @@ public class JwtTokenProvider {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_AUTHORIZATION_HEADER = "Refresh";
 
-    public String generateAccessToken(Authentication authentication) {
+    public String generateAccessToken(Member member) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + accessTokenExpireLength);
 
@@ -38,7 +39,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(expiration);
 
-        claims.put("memberId", authentication.getName());
+        claims.put("memberId", String.valueOf(member.getId().getId()));
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)

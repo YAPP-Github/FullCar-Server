@@ -3,6 +3,7 @@ package com.fullcar.core.config;
 import com.fullcar.core.config.jwt.JwtAuthenticationEntryPoint;
 import com.fullcar.core.config.jwt.JwtAuthenticationFilter;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
+import com.fullcar.member.application.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomUserDetailService customUserDetailService;
 
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/auth/**",
@@ -50,7 +52,7 @@ public class SecurityConfig {
                     authorizeRequests.anyRequest().authenticated();
                 })
                 .exceptionHandling(handler -> handler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtAuthenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtAuthenticationEntryPoint, customUserDetailService), UsernamePasswordAuthenticationFilter.class);
 
             return http.build();
         }
