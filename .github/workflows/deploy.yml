@@ -59,11 +59,11 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
         run: |
-          docker buildx build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
+          docker build --platform=linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY . 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
           mkdir scripts
           touch scripts/deploy.sh
-          echo "aws ecr get-login--password --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+          echo "aws ecr get-login --password --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
@@ -74,7 +74,7 @@ jobs:
         run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
 
       # S3에 업로드
-      - name: Upload to s3
+      - name: Upload to S3
         run:
           aws s3 cp --region ap-northeast-2 ./fullcar.zip s3://fullcar-build/deploy/
 
