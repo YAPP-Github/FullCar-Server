@@ -24,7 +24,8 @@ jobs:
       # 환경 변수 설정
       - name: Set up Environment
         run: |
-          touch application.yml
+          cd ./src/main/resources
+          touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
 
       # 빌드 권한 부여
@@ -59,7 +60,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY
           mkdir scripts
           touch scripts/deploy.sh
-          echo "aws ecr get-login --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+          echo "aws ecr get-login--password --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
