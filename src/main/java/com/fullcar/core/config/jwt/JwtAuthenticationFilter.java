@@ -2,6 +2,9 @@ package com.fullcar.core.config.jwt;
 
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.application.CustomUserDetailService;
+import com.fullcar.member.domain.Member;
+import com.fullcar.member.domain.MemberId;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,6 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomUserDetailService customUserDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -43,7 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void setAuthentication(String token) {
         Claims claims = jwtTokenProvider.getAccessTokenPayload(token);
-        Authentication authentication = new UserAuthentication(claims.get("memberId"), null, null);
+        UserDetails userDetails = customUserDetailService.loadUserByUsername((String) claims.get("memberId"));
+        Authentication authentication = new UserAuthentication(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

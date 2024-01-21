@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum SuccessCode {
     /* 201 CREATED */
+    REGISTER_SUCCESS(CREATED, "등록 성공"),
 
     /* 200 OK */
     SIGNIN_SUCCESS(OK, "소셜로그인 성공"),

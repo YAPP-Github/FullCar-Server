@@ -20,9 +20,10 @@ public enum ErrorCode {
     EXPIRED_TOKEN(UNAUTHORIZED, "만료된 accessToken 입니다."),
     INVALID_CLAIMS(UNAUTHORIZED, "올바르지 않은 Claim"),
     SIGNIN_REQUIRED(UNAUTHORIZED, "access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다."),
-    INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저");
+    INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저"),
 
     /* 404 NOT FOUND */
+    NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다.");
 
     private final HttpStatus status;
     private final String message;
