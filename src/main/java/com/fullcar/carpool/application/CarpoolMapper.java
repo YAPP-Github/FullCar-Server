@@ -26,6 +26,10 @@ public class CarpoolMapper {
                 .build();
     }
 
+    public CarpoolDto.CarpoolResponseDto toResponseDto(Carpool carpool) {
+
+    }
+
     public Carpool toEntity(MemberId memberId, CarpoolDto carpoolDto) {
         return Carpool.builder()
                 .carpoolId(carpoolIdService.nextId())

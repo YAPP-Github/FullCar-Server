@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Validated
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,5 +27,14 @@ public class CarpoolService {
         return carpoolMapper.toDto(
                 carpoolRepository.saveAndFlush(carpool)
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<CarpoolDto.CarpoolResponseDto> getCarpoolList(MemberId memberId) {
+        List<Carpool> carpools = carpoolRepository.findAllByDeletedIsFalse();
+
+        return carpoolRepository.findAllByDeletedIsFalse().stream()
+                .map(carpoolMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
