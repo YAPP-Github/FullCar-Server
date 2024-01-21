@@ -28,7 +28,7 @@ jobs:
           mkdir ./resources
           cd ./resources
           touch ./application.yml
-          echo "${{ secrets.APPLICATION_YML }}" >> ./application.yml
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > .application.yml
           cat ./application.yml
 
       # 빌드 권한 부여
@@ -64,7 +64,7 @@ jobs:
           
           mkdir scripts
           touch scripts/deploy.sh
-          echo "aws ecr get-login-password --region ap-northeast-2 --no-include-email | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
+          echo "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ECR_REGISTRY" >> scripts/deploy.sh
           echo "docker pull $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
           echo "docker rm -f codedeploy" >> scripts/deploy.sh
           echo "docker rmi $ECR_REGISTRY/$ECR_REPOSITORY" >> scripts/deploy.sh
@@ -72,7 +72,7 @@ jobs:
 
       # zip 파일로 압축
       - name: zip file
-        run: zip -r fullcar.zip ./scripts ./appspec.yml ./build/libs/*.jar
+        run: zip -r fullcar.zip ./scripts ./src/main/resources/application.yml ./appspec.yml ./build/libs/*.jar
 
       # S3에 업로드
       - name: Upload to S3
