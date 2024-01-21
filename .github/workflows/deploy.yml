@@ -21,6 +21,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # 빌드 권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 빌드
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
       # 환경 변수 설정
       - name: Set up Environment
         working-directory: ./src/main
@@ -30,14 +38,6 @@ jobs:
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" | base64 --decode | tee .application.yml
           cat .application.yml
-
-      # 빌드 권한 부여
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # 빌드
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
 
       # AWS 자격 증명
       - name: Configure AWS credentials
