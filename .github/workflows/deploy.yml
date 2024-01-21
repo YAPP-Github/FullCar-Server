@@ -28,8 +28,8 @@ jobs:
           mkdir ./resources
           cd ./resources
           touch ./application.yml
-          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > .application.yml
-          cat ./src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode | tee .application.yml
+          cat .application.yml
 
       # 빌드 권한 부여
       - name: Grant execute permission for gradlew
