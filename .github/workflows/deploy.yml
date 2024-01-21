@@ -23,7 +23,10 @@ jobs:
 
       # 환경 변수 설정
       - name: Set up Environment
+        working-directory: ./src/main
         run: |
+          mkdir ./resources
+          cd ./resources
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" | base64 --decode | tee .application.yml
           cat .application.yml
