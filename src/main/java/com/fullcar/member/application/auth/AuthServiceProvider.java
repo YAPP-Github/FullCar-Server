@@ -1,25 +1,18 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
 import com.fullcar.core.config.jwt.JwtExceptionType;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
-import com.fullcar.core.config.jwt.UserAuthentication;
-import com.fullcar.core.exception.BadRequestException;
 import com.fullcar.core.exception.CustomException;
-import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberRepository;
-import com.fullcar.member.domain.MemberSocialType;
-import com.fullcar.member.presentation.dto.response.AuthResponseDto;
-import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
-import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
+import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.MemberRepository;
+import com.fullcar.member.domain.member.MemberSocialType;
+import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
+import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
+import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;

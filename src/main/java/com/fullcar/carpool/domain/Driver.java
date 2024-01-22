@@ -1,6 +1,6 @@
 package com.fullcar.carpool.domain;
 
-import com.fullcar.member.domain.MemberId;
+import com.fullcar.member.domain.member.MemberId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

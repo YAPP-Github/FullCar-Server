@@ -1,6 +1,7 @@
-package com.fullcar.member.domain;
+package com.fullcar.member.domain.member.service;
 
 import com.fullcar.core.id.SnowFlake;
+import com.fullcar.member.domain.member.MemberId;
 import org.springframework.stereotype.Service;
 
 @Service

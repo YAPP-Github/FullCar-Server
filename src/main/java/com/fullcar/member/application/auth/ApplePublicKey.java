@@ -1,4 +1,4 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

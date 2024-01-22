@@ -1,5 +1,6 @@
-package com.fullcar.member.domain;
+package com.fullcar.member.domain.auth.service;
 
+import com.fullcar.member.domain.auth.SocialId;
 import org.springframework.stereotype.Service;
 
 @Service

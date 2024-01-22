@@ -1,10 +1,10 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberId;
-import com.fullcar.member.domain.MemberRepository;
+import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.MemberId;
+import com.fullcar.member.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

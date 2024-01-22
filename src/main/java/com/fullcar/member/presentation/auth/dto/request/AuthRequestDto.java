@@ -1,6 +1,6 @@
-package com.fullcar.member.presentation.dto.request;
+package com.fullcar.member.presentation.auth.dto.request;
 
-import com.fullcar.member.domain.MemberSocialType;
+import com.fullcar.member.domain.member.MemberSocialType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;

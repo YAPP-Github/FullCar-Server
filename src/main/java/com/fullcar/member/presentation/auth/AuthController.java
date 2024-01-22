@@ -1,14 +1,14 @@
-package com.fullcar.member.presentation;
+package com.fullcar.member.presentation.auth;
 
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
-import com.fullcar.member.application.AuthService;
-import com.fullcar.member.application.AuthServiceProvider;
-import com.fullcar.member.presentation.dto.request.AuthRequestDto;
-import com.fullcar.member.presentation.dto.request.AuthTokenRequestDto;
-import com.fullcar.member.presentation.dto.response.AuthResponseDto;
-import com.fullcar.member.presentation.dto.response.AuthTokenResponseDto;
-import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
+import com.fullcar.member.application.auth.AuthService;
+import com.fullcar.member.application.auth.AuthServiceProvider;
+import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.AuthTokenRequestDto;
+import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
+import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
+import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

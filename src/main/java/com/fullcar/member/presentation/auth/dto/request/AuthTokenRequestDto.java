@@ -1,4 +1,4 @@
-package com.fullcar.member.presentation.dto.request;
+package com.fullcar.member.presentation.auth.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

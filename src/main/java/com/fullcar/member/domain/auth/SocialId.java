@@ -1,4 +1,4 @@
-package com.fullcar.member.domain;
+package com.fullcar.member.domain.auth;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

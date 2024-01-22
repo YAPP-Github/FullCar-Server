@@ -1,6 +1,6 @@
-package com.fullcar.member.presentation.dto;
+package com.fullcar.member.presentation.auth.dto;
 
-import com.fullcar.member.domain.Member;
+import com.fullcar.member.domain.member.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

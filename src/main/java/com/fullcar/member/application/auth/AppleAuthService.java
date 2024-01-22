@@ -1,4 +1,4 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,9 +6,13 @@ import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.BadRequestException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.*;
-import com.fullcar.member.presentation.dto.request.AuthRequestDto;
-import com.fullcar.member.presentation.dto.response.SocialInfoResponseDto;
+import com.fullcar.member.domain.auth.SocialId;
+import com.fullcar.member.domain.auth.service.SocialIdService;
+import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.service.MemberIdService;
+import com.fullcar.member.domain.member.MemberRepository;
+import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

@@ -1,4 +1,4 @@
-package com.fullcar.member.domain;
+package com.fullcar.member.domain.member;
 
 import lombok.AccessLevel;
 import lombok.Getter;

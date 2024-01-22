@@ -1,5 +1,6 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
+import com.fullcar.member.application.auth.ApplePublicKey;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

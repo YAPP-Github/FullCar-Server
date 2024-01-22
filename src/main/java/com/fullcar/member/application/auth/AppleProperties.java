@@ -1,4 +1,4 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

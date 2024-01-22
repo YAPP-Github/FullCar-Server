@@ -1,8 +1,8 @@
-package com.fullcar.member.application;
+package com.fullcar.member.application.auth;
 
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberId;
-import com.fullcar.member.presentation.dto.CustomUserDetails;
+import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.MemberId;
+import com.fullcar.member.presentation.auth.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,6 @@
-package com.fullcar.member.presentation.dto.response;
+package com.fullcar.member.presentation.auth.dto.response;
 
-import com.fullcar.member.domain.SocialId;
+import com.fullcar.member.domain.auth.SocialId;
 import lombok.Builder;
 import lombok.Data;
 

@@ -1,5 +1,7 @@
-package com.fullcar.member.domain;
+package com.fullcar.member.domain.member;
 
+import com.fullcar.member.domain.car.CarId;
+import com.fullcar.member.domain.auth.SocialId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,9 @@ public class Member {
 
     @EmbeddedId
     private MemberId id;
+
+    @Column(name = "car_id")
+    private CarId carId;
 
     private SocialId socialId;
 
@@ -64,5 +69,9 @@ public class Member {
     public void loginMember(String deviceToken, String refreshToken) {
         this.deviceToken = deviceToken;
         this.refreshToken = refreshToken;
+    }
+
+    public void updateCarInformation(CarId carId) {
+        this.carId = carId;
     }
 }
