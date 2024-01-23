@@ -16,6 +16,6 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 public class CarId implements Serializable {
 
-    @Column(name = "car_id")
+    @Column(name = "id")
     private Long id;
 }

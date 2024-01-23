@@ -27,7 +27,9 @@ public class Member {
     @EmbeddedId
     private MemberId id;
 
-    @Column(name = "car_id")
+    @AttributeOverrides(
+            @AttributeOverride(name = "id", column = @Column(name = "car_id"))
+    )
     private CarId carId;
 
     private SocialId socialId;
