@@ -5,7 +5,7 @@ import com.fullcar.carpool.presentation.dto.CarpoolDto;
 import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
-import com.fullcar.member.domain.Member;
+import com.fullcar.member.domain.member.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

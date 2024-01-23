@@ -3,7 +3,7 @@ package com.fullcar.core.config;
 import com.fullcar.core.config.jwt.JwtAuthenticationEntryPoint;
 import com.fullcar.core.config.jwt.JwtAuthenticationFilter;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
-import com.fullcar.member.application.CustomUserDetailService;
+import com.fullcar.member.application.auth.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

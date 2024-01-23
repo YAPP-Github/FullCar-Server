@@ -2,9 +2,7 @@ package com.fullcar.core.config.jwt;
 
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.application.CustomUserDetailService;
-import com.fullcar.member.domain.Member;
-import com.fullcar.member.domain.MemberId;
+import com.fullcar.member.application.auth.CustomUserDetailService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
