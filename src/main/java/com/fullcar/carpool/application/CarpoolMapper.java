@@ -5,7 +5,7 @@ import com.fullcar.carpool.domain.Cost;
 import com.fullcar.carpool.domain.Driver;
 import com.fullcar.carpool.domain.service.CarpoolIdService;
 import com.fullcar.carpool.presentation.dto.CarpoolDto;
-import com.fullcar.member.domain.MemberId;
+import com.fullcar.member.domain.member.MemberId;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

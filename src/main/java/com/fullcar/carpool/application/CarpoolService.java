@@ -3,7 +3,7 @@ package com.fullcar.carpool.application;
 import com.fullcar.carpool.domain.Carpool;
 import com.fullcar.carpool.domain.CarpoolRepository;
 import com.fullcar.carpool.presentation.dto.CarpoolDto;
-import com.fullcar.member.domain.MemberId;
+import com.fullcar.member.domain.member.MemberId;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
