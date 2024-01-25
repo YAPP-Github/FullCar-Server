@@ -11,7 +11,6 @@ import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MemberIdService;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.presentation.auth.dto.KakaoInfoDto;
 import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +41,11 @@ public class KakaoAuthService implements AuthService {
     @Transactional
     public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
         String deviceToken = authRequestDto.getDeviceToken();
-        KakaoInfoDto kakaoInfoDto = getKakaoData(authRequestDto.getToken());
-        SocialId socialId = socialIdService.generateSocialId(kakaoInfoDto.getSocialId());
+        SocialId socialId = socialIdService.generateSocialId(getKakaoData(authRequestDto.getToken()));
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
-        else createMember(kakaoInfoDto, deviceToken, refreshToken);
+        else createMember(socialId, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(socialId)
@@ -55,7 +53,7 @@ public class KakaoAuthService implements AuthService {
                 .build();
     }
 
-    private static KakaoInfoDto getKakaoData(String kakaoToken) {
+    private static String getKakaoData(String kakaoToken) {
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -77,13 +75,8 @@ public class KakaoAuthService implements AuthService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            JsonNode kakaoAccount = jsonNode.get("kakao_account");
 
-            String socialId = jsonNode.get("id").asText();
-            String gender = kakaoAccount.get("gender").asText();
-            String ageRange = kakaoAccount.get("age_range").asText();
-
-            return new KakaoInfoDto(socialId, gender, ageRange);
+            return jsonNode.get("id").asText();
         } catch (HttpClientErrorException e) {
             throw new NotFoundException(ErrorCode.UNAUTHORIZED_KAKAO_TOKEN);
         } catch (JsonProcessingException e) {
@@ -92,12 +85,10 @@ public class KakaoAuthService implements AuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(KakaoInfoDto kakaoInfoDto, String deviceToken, String refreshToken) {
+    private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
         memberRepository.save(Member.builder()
                 .id(memberIdService.nextId())
-                .socialId(socialIdService.generateSocialId(kakaoInfoDto.getSocialId()))
-                .gender(kakaoInfoDto.getGender())
-                .ageRange(kakaoInfoDto.getAgeRange())
+                .socialId(socialId)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build());

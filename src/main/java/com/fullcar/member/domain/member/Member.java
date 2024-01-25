@@ -41,10 +41,6 @@ public class Member {
     private String nickname;
 
     private String email;
-    
-    private String gender;
-
-    private String ageRange;
 
     @Builder.Default
     @Column(name = "onboarding_flag")
