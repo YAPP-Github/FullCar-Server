@@ -42,6 +42,8 @@ public class Member {
 
     private String email;
 
+    private String gender;
+
     @Builder.Default
     @Column(name = "onboarding_flag")
     private boolean flag = false;
