@@ -1,9 +1,12 @@
-package com.fullcar.carpool.presentation.dto;
+package com.fullcar.carpool.presentation.dto.response;
 
 import com.fullcar.carpool.domain.MoodType;
 import com.fullcar.carpool.domain.PeriodType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -13,8 +16,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Schema(description = "카풀 모델")
-public class CarpoolDto {
+@Schema(description = "카풀 응답 모델")
+public class CarpoolResponseDto {
 
     @Schema(description = "카풀 id")
     private Long id;
@@ -34,19 +37,12 @@ public class CarpoolDto {
     @Schema(description = "운행 분위기")
     private MoodType moodType;
 
-    @Getter
-    @SuperBuilder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Schema(description = "카풀 응답모델")
-    public static class CarpoolResponseDto extends CarpoolDto {
-        @Schema(description = "회사명")
-        private String companyName;
+    @Schema(description = "회사명")
+    private String companyName;
 
-        @Schema(description = "성별")
-        private String gender;
+    @Schema(description = "성별")
+    private String gender;
 
-        @Schema(description = "생성 Timestamp")
-        private LocalDateTime createdAt;
-    }
+    @Schema(description = "생성 Timestamp")
+    private LocalDateTime createdAt;
 }

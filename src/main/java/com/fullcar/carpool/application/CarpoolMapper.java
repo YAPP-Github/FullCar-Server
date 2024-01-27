@@ -4,8 +4,10 @@ import com.fullcar.carpool.domain.Carpool;
 import com.fullcar.carpool.domain.Cost;
 import com.fullcar.carpool.domain.Driver;
 import com.fullcar.carpool.domain.service.CarpoolIdService;
-import com.fullcar.carpool.presentation.dto.CarpoolDto;
-import com.fullcar.member.domain.member.MemberId;
+import com.fullcar.carpool.presentation.dto.request.CarpoolRequestDto;
+import com.fullcar.carpool.presentation.dto.response.CarpoolResponseDto;
+import com.fullcar.member.domain.member.Member;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,36 +17,35 @@ import org.springframework.stereotype.Component;
 public class CarpoolMapper {
     private final CarpoolIdService carpoolIdService;
 
-    public CarpoolDto toDto(Carpool carpool) {
-        return CarpoolDto.builder()
+    public CarpoolResponseDto toDto(Carpool carpool, Member member) {
+        return CarpoolResponseDto.builder()
                 .id(carpool.getCarpoolId().getId())
                 .pickupLocation(carpool.getPickupLocation())
                 .periodType(carpool.getCost().getPeriodType())
                 .money(carpool.getCost().getMoney())
                 .content(carpool.getContent())
                 .moodType(carpool.getMoodType())
+                .companyName(member.getCompany())
+                .gender(member.getGender())
+                .createdAt(carpool.getCreatedAt())
                 .build();
     }
 
-    public CarpoolDto.CarpoolResponseDto toResponseDto(Carpool carpool) {
-
-    }
-
-    public Carpool toEntity(MemberId memberId, CarpoolDto carpoolDto) {
+    public Carpool toEntity(Member member, CarpoolRequestDto carpoolRequestDto) {
         return Carpool.builder()
                 .carpoolId(carpoolIdService.nextId())
-                .pickupLocation(carpoolDto.getPickupLocation())
+                .pickupLocation(carpoolRequestDto.getPickupLocation())
                 .cost(
                         Cost.builder()
-                                .periodType(carpoolDto.getPeriodType())
-                                .money(carpoolDto.getMoney())
+                                .periodType(carpoolRequestDto.getPeriodType())
+                                .money(carpoolRequestDto.getMoney())
                                 .build()
                 )
-                .content(carpoolDto.getContent())
-                .moodType(carpoolDto.getMoodType())
+                .content(carpoolRequestDto.getContent())
+                .moodType(carpoolRequestDto.getMoodType())
                 .driver(
                         Driver.builder()
-                                .memberId(memberId)
+                                .memberId(member.getId())
                                 .build()
                 )
                 .build();

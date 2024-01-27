@@ -1,18 +1,12 @@
 package com.fullcar.carpool.domain;
 
-import com.fullcar.carpool.domain.event.MemberRequestEvent;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.domain.AfterDomainEventPublication;
-import org.springframework.data.domain.DomainEvents;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -59,21 +53,4 @@ public class Carpool {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    @Transient
-    private final Collection<DomainEvent> domainEvents;
-
-    @DomainEvents
-    Collection<Object> domainEvents() {
-        List<Object> domainEvents = new ArrayList<>();
-        domainEvents.add(
-                new MemberRequestEvent(this.driver.getMemberId())
-        );
-        return domainEvents;
-    }
-
-    @AfterDomainEventPublication
-    public void clearEvents() {
-        domainEvents.clear();
-    }
 }

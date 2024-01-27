@@ -1,7 +1,8 @@
 package com.fullcar.carpool.presentation;
 
 import com.fullcar.carpool.application.CarpoolService;
-import com.fullcar.carpool.presentation.dto.CarpoolDto;
+import com.fullcar.carpool.presentation.dto.request.CarpoolRequestDto;
+import com.fullcar.carpool.presentation.dto.response.CarpoolResponseDto;
 import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
@@ -12,33 +13,51 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
-@Tag(description = "카풀 관련 Endpoint", name = "카풀")
+@Tag(name = "[Carpool] 카풀 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/carpools")
 public class CarpoolController {
     private final CarpoolService carpoolService;
 
-    @Operation(description = "카풀 등록")
+    @Operation(summary = "카풀 등록 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "등록 성공")
     })
     @PostMapping("")
-    public ApiResponse<CarpoolDto> postCarpool(
+    public ApiResponse<CarpoolResponseDto> postCarpool(
             @Parameter(hidden = true)
             @CurrentMember Member member,
             @Parameter(description = "카풀 모델", required = true)
-            @RequestBody @Valid CarpoolDto carpoolDto
+            @RequestBody @Valid CarpoolRequestDto carpoolRequestDto
     ) {
         return ApiResponse.success(
                 SuccessCode.REGISTER_SUCCESS,
-                carpoolService.registerCarpool(member.getId(), carpoolDto)
+                carpoolService.registerCarpool(member, carpoolRequestDto)
+        );
+    }
+
+    @Operation(summary = "카풀 목록 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("")
+    public ApiResponse<Slice<CarpoolResponseDto>> getCarpools(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @RequestParam int page,
+            @RequestParam int size
+            ) {
+        return ApiResponse.success(
+                SuccessCode.READ_SUCCESS,
+                carpoolService.getCarpoolList(member, page, size)
         );
     }
 }
