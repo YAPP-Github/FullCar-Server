@@ -13,7 +13,8 @@ public enum SuccessCode {
 
     /* 200 OK */
     SIGNIN_SUCCESS(OK, "소셜로그인 성공"),
-    GET_NEW_TOKEN_SUCCESS(OK, "토큰 재발급 성공");
+    GET_NEW_TOKEN_SUCCESS(OK, "토큰 재발급 성공"),
+    READ_SUCCESS(OK, "조회 성공");
 
     private final HttpStatus status;
     private final String message;
