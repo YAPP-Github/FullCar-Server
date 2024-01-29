@@ -1,5 +1,6 @@
 package com.fullcar.member.application.auth;
 
+import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberId;
 import com.fullcar.member.presentation.auth.dto.CustomUserDetails;
