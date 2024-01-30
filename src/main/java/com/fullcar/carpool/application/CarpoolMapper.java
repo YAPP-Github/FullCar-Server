@@ -26,8 +26,6 @@ public class CarpoolMapper {
                 .money(carpool.getCost().getMoney())
                 .content(carpool.getContent())
                 .moodType(carpool.getMoodType())
-                .carpoolState(carpool.getCarpoolState())
-                .companyName(member.getCompany())
                 .gender(member.getGender())
                 .createdAt(carpool.getCreatedAt())
                 .build();
