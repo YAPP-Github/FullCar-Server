@@ -1,18 +1,20 @@
-package com.fullcar.member.application.auth;
+package com.fullcar.member.application.member;
 
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.member.Member;
-import com.fullcar.member.domain.member.MemberId;
-import com.fullcar.member.domain.member.MemberRepository;
+import com.fullcar.member.domain.member.*;
+import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final CompanyMapper companyMapper;
 
     /**
      * 회원을 식별자로 조회합니다.
@@ -26,4 +28,9 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_EXIST_USER));
     }
 
+    @Transactional
+    public void registerCompany(Member member, CompanyRequestDto companyRequestDto) {
+        Company company = companyMapper.toEntity(companyRequestDto);
+        findByMemberId(member.getId()).updateCompany(company);
+    }
 }
