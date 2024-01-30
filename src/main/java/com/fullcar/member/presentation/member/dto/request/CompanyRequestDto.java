@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CompanyRequestDto {
-    @Schema(description = "회사 이름")
+    @Schema(description = "회사 이름", example = "네이버")
     @NotBlank
     private String companyName;
 
