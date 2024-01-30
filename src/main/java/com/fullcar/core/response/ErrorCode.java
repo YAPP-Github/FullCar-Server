@@ -23,7 +23,9 @@ public enum ErrorCode {
     INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저"),
 
     /* 404 NOT FOUND */
-    NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다.");
+    NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다."),
+    NOT_EXIST_CARPOOL(NOT_FOUND, "존재하지 않는 카풀입니다."),
+    NOT_EXIST_CAR(NOT_FOUND, "존재하지 않는 차량입니다.");
 
     private final HttpStatus status;
     private final String message;

@@ -39,6 +39,10 @@ public class Car {
     @Column(name = "car_color", nullable = false)
     private String carColor;
 
+    @Builder.Default
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@SuperBuilder
+@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(description = "카풀 요청모델")
