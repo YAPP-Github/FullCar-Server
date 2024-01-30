@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,8 +16,8 @@ public class CompanyRequestDto {
     private String companyName;
 
     @Schema(description = "위도", example = "46.652719")
-    private Double latitude;
+    private BigDecimal latitude;
 
     @Schema(description = "경도", example = "71.530045")
-    private Double longitude;
+    private BigDecimal longitude;
 }

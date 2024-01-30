@@ -31,6 +31,6 @@ public class MemberService {
     @Transactional
     public void registerCompany(Member member, CompanyRequestDto companyRequestDto) {
         Company company = companyMapper.toEntity(companyRequestDto);
-        memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false).updateCompany(company);
+        findByMemberId(member.getId()).updateCompany(company);
     }
 }

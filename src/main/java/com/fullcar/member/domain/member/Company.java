@@ -2,10 +2,9 @@ package com.fullcar.member.domain.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -18,7 +17,7 @@ public class Company {
     @Column(name = "company_name")
     private String companyName;
 
-    private Double latitude;
+    private BigDecimal latitude;
 
-    private Double longitude;
+    private BigDecimal longitude;
 }
