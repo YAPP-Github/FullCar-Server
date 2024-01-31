@@ -21,6 +21,4 @@ public class Driver {
             @AttributeOverride(name = "id", column = @Column(name = "driver_id"))
     )
     private MemberId memberId;
-
-    //:TODO CarId
 }
