@@ -1,8 +1,8 @@
-package com.fullcar.carpool.presentation.dto.response;
+package com.fullcar.carpool.presentation.carpool.dto.response;
 
-import com.fullcar.carpool.domain.CarpoolState;
-import com.fullcar.carpool.domain.MoodType;
-import com.fullcar.carpool.domain.PeriodType;
+import com.fullcar.carpool.domain.carpool.CarpoolState;
+import com.fullcar.carpool.domain.carpool.MoodType;
+import com.fullcar.carpool.domain.carpool.PeriodType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
