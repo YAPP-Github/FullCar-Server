@@ -1,9 +1,9 @@
-package com.fullcar.carpool.presentation;
+package com.fullcar.carpool.presentation.carpool;
 
-import com.fullcar.carpool.application.CarpoolService;
-import com.fullcar.carpool.domain.CarpoolId;
-import com.fullcar.carpool.presentation.dto.request.CarpoolRequestDto;
-import com.fullcar.carpool.presentation.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.application.carpool.CarpoolService;
+import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
 import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;

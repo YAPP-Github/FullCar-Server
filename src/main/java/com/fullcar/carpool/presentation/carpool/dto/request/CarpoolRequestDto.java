@@ -1,12 +1,9 @@
-package com.fullcar.carpool.presentation.dto.request;
+package com.fullcar.carpool.presentation.carpool.dto.request;
 
-import com.fullcar.carpool.domain.MoodType;
-import com.fullcar.carpool.domain.PeriodType;
+import com.fullcar.carpool.domain.carpool.MoodType;
+import com.fullcar.carpool.domain.carpool.PeriodType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 
 @Getter
