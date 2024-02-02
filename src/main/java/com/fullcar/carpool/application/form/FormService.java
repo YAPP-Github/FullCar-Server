@@ -26,8 +26,7 @@ public class FormService {
 
     @Transactional
     public FormResponseDto requestForm(Member member, CarpoolId carpoolId, FormRequestDto formRequestDto) {
-        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeleted(carpoolId, false)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_CARPOOL));
+        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(carpoolId, false);
 
         Form form = formMapper.toEntity(member, carpoolId, formRequestDto);
 
