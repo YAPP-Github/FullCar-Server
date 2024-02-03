@@ -22,7 +22,7 @@ public class MemberMapper {
     public EmailMessage toEntity(EmailRequestDto emailRequestDto) {
         return EmailMessage.builder()
                 .to(emailRequestDto.getEmail())
-                .subject("[FullCar] 이메일 인증을 위한 인증 코드 발송")
+                .subject("[FullCar] 회사 이메일 인증")
                 .build();
     }
 }
