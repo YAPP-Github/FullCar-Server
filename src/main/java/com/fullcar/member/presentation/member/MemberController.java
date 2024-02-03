@@ -6,6 +6,7 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
+import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,5 +44,16 @@ public class MemberController {
     public ApiResponse<MemberGetResponseDto> getMember(@CurrentMember Member member) {
         MemberGetResponseDto response = memberService.getMember(member);
         return ApiResponse.success(SuccessCode.READ_SUCCESS, response);
+    }
+
+    @Operation(summary = "회사 메일 인증 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "인증메일 발송 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @PostMapping("/onboarding/company/email")
+    public ApiResponse<Object> sendAuthenticationMail(@RequestBody EmailRequestDto emailRequestDto) {
+        memberService.sendMail(emailRequestDto);
+        return ApiResponse.success(SuccessCode.EMAIL_SENT_SUCCESS);
     }
 }

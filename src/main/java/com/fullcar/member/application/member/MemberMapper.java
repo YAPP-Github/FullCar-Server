@@ -1,6 +1,8 @@
 package com.fullcar.member.application.member;
 
+import com.fullcar.member.domain.member.EmailMessage;
 import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,13 @@ public class MemberMapper {
         return MemberGetResponseDto.builder()
                 .nickname(member.getNickname())
                 .companyName(member.getCompany().getCompanyName())
+                .build();
+    }
+
+    public EmailMessage toEntity(EmailRequestDto emailRequestDto) {
+        return EmailMessage.builder()
+                .to(emailRequestDto.getEmail())
+                .subject("[FullCar] 이메일 인증을 위한 인증 코드 발송")
                 .build();
     }
 }
