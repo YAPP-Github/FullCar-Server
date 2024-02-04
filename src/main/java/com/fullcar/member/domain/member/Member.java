@@ -43,6 +43,7 @@ public class Member {
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Builder.Default
@@ -76,7 +77,10 @@ public class Member {
         this.carId = carId;
     }
 
-    public void updateCompany(Company company) {
-        this.company = new Company(company.getCompanyName(), company.getLatitude(), company.getLongitude());
+    public void saveOnBoardingInfo(Member member) {
+        this.email = member.getEmail();
+        this.nickname = member.getNickname();
+        this.gender = member.getGender();
+        this.company = new Company(member.getCompany().getCompanyName(), member.getCompany().getLatitude(), member.getCompany().getLongitude());
     }
 }

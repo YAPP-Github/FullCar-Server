@@ -6,7 +6,7 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
-import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
+import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,14 +26,14 @@ public class MemberController {
     private final MemberService memberService;
     private final MailService mailService;
 
-    @Operation(summary = "회사 선택 API")
+    @Operation(summary = "온보딩 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "등록 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
-    @PostMapping("/onboarding/company")
-    public ApiResponse<Object> postCompany(@CurrentMember Member member, @RequestBody @Valid CompanyRequestDto companyRequestDto) {
-        memberService.registerCompany(member, companyRequestDto);
+    @PostMapping("/onboarding")
+    public ApiResponse<Object> postOnboarding(@CurrentMember Member member, @RequestBody @Valid OnboardingRequestDto onboardingRequestDto) {
+        memberService.registerOnboarding(member, onboardingRequestDto);
         return ApiResponse.success(SuccessCode.REGISTER_SUCCESS);
     }
 
