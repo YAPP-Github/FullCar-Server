@@ -5,6 +5,7 @@ import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
 import com.fullcar.carpool.domain.form.Form;
 import com.fullcar.carpool.domain.form.FormRepository;
+import com.fullcar.carpool.domain.form.Passenger;
 import com.fullcar.carpool.presentation.form.dto.request.FormRequestDto;
 import com.fullcar.carpool.presentation.form.dto.response.FormResponseDto;
 import com.fullcar.core.exception.CustomException;
@@ -15,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -28,12 +33,40 @@ public class FormService {
     public FormResponseDto requestForm(Member member, CarpoolId carpoolId, FormRequestDto formRequestDto) {
         Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(carpoolId, false);
 
+        if (carpool.isMyCarpool(member.getId())) {
+            throw new CustomException(ErrorCode.CANNOT_SEND_TO_OWN_CARPOOL);
+        }
+
+        Optional<Form> duplicatedForm = formRepository.findByPassengerAndCarpoolIdAndIsDeleted(
+                Passenger.builder()
+                        .memberId(member.getId())
+                        .build(),
+                carpoolId,
+                false
+        );
+
+        if (duplicatedForm.isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATED_FORM);
+        }
+
         Form form = formMapper.toEntity(member, carpoolId, formRequestDto);
 
         return formMapper.toDto(
                 formRepository.saveAndFlush(form),
                 member
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<FormResponseDto> readSentForm(Member member) {
+        return formRepository.findAllByPassengerAndIsDeletedOrderByCreatedAtDesc(
+                Passenger.builder()
+                        .memberId(member.getId())
+                        .build(),
+                false
+        ).stream()
+                .map(form -> formMapper.toDto(form, member))
+                .collect(Collectors.toList());
     }
 
 }
