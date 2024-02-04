@@ -1,5 +1,6 @@
-package com.fullcar.carpool.domain;
+package com.fullcar.carpool.domain.form;
 
+import com.fullcar.carpool.domain.carpool.PeriodType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;

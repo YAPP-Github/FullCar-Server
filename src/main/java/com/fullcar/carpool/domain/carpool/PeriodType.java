@@ -1,4 +1,4 @@
-package com.fullcar.carpool.domain;
+package com.fullcar.carpool.domain.carpool;
 
 public enum PeriodType {
     ONCE,
