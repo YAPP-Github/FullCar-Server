@@ -1,10 +1,10 @@
-package com.fullcar.carpool.application;
+package com.fullcar.carpool.application.carpool;
 
-import com.fullcar.carpool.domain.Carpool;
-import com.fullcar.carpool.domain.CarpoolId;
-import com.fullcar.carpool.domain.CarpoolRepository;
-import com.fullcar.carpool.presentation.dto.request.CarpoolRequestDto;
-import com.fullcar.carpool.presentation.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.domain.carpool.Carpool;
+import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.domain.carpool.CarpoolRepository;
+import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.car.Car;
@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class CarpoolService {
     private final CarpoolRepository carpoolRepository;
-    private final CarRepository carRepository;
+    private final CarRepository carRepository;  //:TODO Event 기반으로 변경
     private final CarpoolMapper carpoolMapper;
 
     @Transactional

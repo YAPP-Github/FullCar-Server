@@ -1,17 +1,17 @@
 package com.fullcar.carpool.domain.service;
 
-import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.domain.form.FormId;
 import com.fullcar.core.id.SnowFlake;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CarpoolIdService {
+public class FormIdService {
     private final SnowFlake snowFlake;
 
-    public CarpoolIdService() {
+    public FormIdService() {
         snowFlake = new SnowFlake(255);
     }
-    public CarpoolId nextId() {
-        return new CarpoolId(snowFlake.nextId());
+    public FormId nextId() {
+        return new FormId(snowFlake.nextId());
     }
 }

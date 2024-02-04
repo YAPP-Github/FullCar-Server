@@ -1,4 +1,4 @@
-package com.fullcar.carpool.presentation.dto.response;
+package com.fullcar.carpool.presentation.carpool.dto.response;
 
 import com.fullcar.carpool.domain.CarpoolState;
 import com.fullcar.carpool.domain.MoodType;

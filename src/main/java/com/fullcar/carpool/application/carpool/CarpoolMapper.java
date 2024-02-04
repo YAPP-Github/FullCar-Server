@@ -1,11 +1,11 @@
-package com.fullcar.carpool.application;
+package com.fullcar.carpool.application.carpool;
 
-import com.fullcar.carpool.domain.Carpool;
-import com.fullcar.carpool.domain.Cost;
-import com.fullcar.carpool.domain.Driver;
+import com.fullcar.carpool.domain.carpool.Carpool;
+import com.fullcar.carpool.domain.carpool.Cost;
+import com.fullcar.carpool.domain.carpool.Driver;
 import com.fullcar.carpool.domain.service.CarpoolIdService;
-import com.fullcar.carpool.presentation.dto.request.CarpoolRequestDto;
-import com.fullcar.carpool.presentation.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
 import com.fullcar.member.domain.car.Car;
 import com.fullcar.member.domain.member.Member;
 
