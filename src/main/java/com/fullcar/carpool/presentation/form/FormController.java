@@ -16,10 +16,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "[Form] 신청서 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/carpools/{carpoolId}/forms")
+@RequestMapping("/api/v1")
 public class FormController {
     private final FormService formService;
 
@@ -27,7 +29,7 @@ public class FormController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "등록 성공")
     })
-    @PostMapping("")
+    @PostMapping("/carpools/{carpoolId}/forms")
     public ApiResponse<FormResponseDto> postForm(
             @Parameter(hidden = true)
             @CurrentMember Member member,
@@ -43,6 +45,21 @@ public class FormController {
                         new CarpoolId(carpoolId),
                         formRequestDto
                 )
+        );
+    }
+
+    @Operation(summary = "보낸 신청서 목록 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("/sent-forms")
+    public ApiResponse<List<FormResponseDto>> getSentForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member
+    ) {
+        return ApiResponse.success(
+                SuccessCode.REGISTER_SUCCESS,
+                formService.readSentForm(member)
         );
     }
 }

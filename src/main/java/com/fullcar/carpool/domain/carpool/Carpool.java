@@ -1,5 +1,6 @@
 package com.fullcar.carpool.domain.carpool;
 
+import com.fullcar.member.domain.member.MemberId;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -53,4 +54,8 @@ public class Carpool {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public boolean isMyCarpool(MemberId memberId) {
+        return this.getDriver().getMemberId().getId().equals(memberId.getId());
+    }
 }
