@@ -2,7 +2,6 @@ package com.fullcar.member.infra;
 
 import com.fullcar.member.application.member.MemberMapper;
 import com.fullcar.member.domain.blacklist.BlacklistRepository;
-import com.fullcar.member.domain.member.EmailMessage;
 import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import jakarta.mail.MessagingException;

@@ -1,4 +1,4 @@
-package com.fullcar.member.domain.member;
+package com.fullcar.member.infra;
 
 import lombok.Builder;
 import lombok.Getter;

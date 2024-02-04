@@ -1,6 +1,6 @@
 package com.fullcar.member.application.member;
 
-import com.fullcar.member.domain.member.EmailMessage;
+import com.fullcar.member.infra.EmailMessage;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
