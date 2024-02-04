@@ -14,6 +14,9 @@ public class MemberMapper {
         return MemberGetResponseDto.builder()
                 .nickname(member.getNickname())
                 .companyName(member.getCompany().getCompanyName())
+                .email(member.getEmail())
+                .gender(member.getGender())
+                .carId(member.getCarId())
                 .build();
     }
 }
