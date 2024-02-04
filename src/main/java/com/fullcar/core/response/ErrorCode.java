@@ -13,8 +13,6 @@ public enum ErrorCode {
 
     /* 400 BAD REQUEST */
     FAILED_TO_GENERATE_PUBLIC_KEY(BAD_REQUEST, "애플 공개키 생성 중 문제 발생"),
-    CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
-    DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),
