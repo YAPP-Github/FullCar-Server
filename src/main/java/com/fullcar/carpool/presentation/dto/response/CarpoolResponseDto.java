@@ -3,7 +3,6 @@ package com.fullcar.carpool.presentation.dto.response;
 import com.fullcar.carpool.domain.CarpoolState;
 import com.fullcar.carpool.domain.MoodType;
 import com.fullcar.carpool.domain.PeriodType;
-import com.fullcar.member.domain.member.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -46,7 +45,7 @@ public class CarpoolResponseDto {
     private String companyName;
 
     @Schema(description = "성별")
-    private Gender gender;
+    private String gender;
 
     @Schema(description = "생성 Timestamp")
     private LocalDateTime createdAt;
