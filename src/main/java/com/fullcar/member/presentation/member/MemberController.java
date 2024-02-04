@@ -5,6 +5,7 @@ import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MailService mailService;
 
     @Operation(summary = "회사 선택 API")
     @ApiResponses({
@@ -53,7 +55,7 @@ public class MemberController {
     })
     @PostMapping("/onboarding/company/email")
     public ApiResponse<Object> sendAuthenticationMail(@RequestBody EmailRequestDto emailRequestDto) {
-        memberService.sendMail(emailRequestDto);
+        mailService.sendMail(emailRequestDto);
         return ApiResponse.success(SuccessCode.EMAIL_SENT_SUCCESS);
     }
 }

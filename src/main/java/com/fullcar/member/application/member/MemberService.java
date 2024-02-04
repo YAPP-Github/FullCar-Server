@@ -2,33 +2,21 @@ package com.fullcar.member.application.member;
 
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.domain.blacklist.BlacklistRepository;
 import com.fullcar.member.domain.member.*;
 import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
-import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.context.Context;
 
 @Validated
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BlacklistRepository blacklistRepository;
     private final CompanyMapper companyMapper;
     private final MemberMapper memberMapper;
-    private final JavaMailSender javaMailSender;
-    private final SpringTemplateEngine templateEngine;
 
     /**
      * 회원을 식별자로 조회합니다.
@@ -51,30 +39,5 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberGetResponseDto getMember(Member member) {
         return memberMapper.toDto(member);
-    }
-
-    public void sendMail(EmailRequestDto emailRequestDto) {
-        String email = emailRequestDto.getEmail();
-        String emailDomain = email.substring(email.lastIndexOf("@")+1);
-        blacklistRepository.findByEmailThrow(emailDomain);
-
-        EmailMessage emailMessage = memberMapper.toEntity(emailRequestDto);
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-        try {
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            mimeMessageHelper.setTo(emailMessage.getTo());
-            mimeMessageHelper.setSubject(emailMessage.getSubject());
-            mimeMessageHelper.setText(setContext(),true);
-            mimeMessageHelper.addInline("image", new ClassPathResource("static/images/fullcar_logo.png"));
-            javaMailSender.send(mimeMessage);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String setContext() {
-        Context context = new Context();
-        return templateEngine.process("email", context);
     }
 }
