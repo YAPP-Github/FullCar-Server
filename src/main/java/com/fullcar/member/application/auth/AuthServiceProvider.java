@@ -43,7 +43,6 @@ public class AuthServiceProvider {
         String accessToken = jwtTokenProvider.generateAccessToken(member);
 
         return AuthResponseDto.builder()
-                .onBoardingFlag(member.isFlag())
                 .accessToken(accessToken)
                 .refreshToken(socialResponseDto.getRefreshToken())
                 .build();

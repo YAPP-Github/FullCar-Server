@@ -46,10 +46,6 @@ public class Member {
     private Gender gender;
 
     @Builder.Default
-    @Column(name = "onboarding_flag")
-    private boolean flag = false;
-
-    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
