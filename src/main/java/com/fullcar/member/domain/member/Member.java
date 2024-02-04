@@ -43,7 +43,7 @@ public class Member {
 
     private String email;
 
-    private String gender;
+    private Gender gender;
 
     @Builder.Default
     @Column(name = "onboarding_flag")
