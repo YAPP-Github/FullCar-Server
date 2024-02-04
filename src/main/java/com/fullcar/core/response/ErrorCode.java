@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     /* 400 BAD REQUEST */
     FAILED_TO_GENERATE_PUBLIC_KEY(BAD_REQUEST, "애플 공개키 생성 중 문제 발생"),
+    EMAIL_ADDRESS_IN_BLACKLIST(BAD_REQUEST, "블랙리스트에 있는 이메일 주소입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),
