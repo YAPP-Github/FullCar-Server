@@ -31,4 +31,10 @@ public class CarService {
                 carRepository.saveAndFlush(car)
         );
     }
+
+    @Transactional(readOnly = true)
+    public CarDto getCar(Member member) {
+        Car car = carRepository.findByCarIdAndIsDeletedOrThrow(member.getCarId(), false);
+        return carMapper.toDto(car);
+    }
 }
