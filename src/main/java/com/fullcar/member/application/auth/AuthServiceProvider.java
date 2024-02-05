@@ -11,6 +11,7 @@ import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class AuthServiceProvider {
     private final AppleAuthService appleAuthService;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
+    private final EntityManager entityManager;
 
     @PostConstruct
     void initializeAuthServicesMap() {
@@ -67,6 +69,7 @@ public class AuthServiceProvider {
 
     @Transactional
     public void socialLogout(Member member) {
-        member.clearRefreshTokenAndDeviceToken();
+        memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false).clearRefreshTokenAndDeviceToken();
+        memberRepository.flush();
     }
 }
