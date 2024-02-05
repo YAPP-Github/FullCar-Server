@@ -6,9 +6,11 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
+import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
+import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -57,5 +59,16 @@ public class MemberController {
     public ApiResponse<Object> sendAuthenticationMail(@RequestBody EmailRequestDto emailRequestDto) {
         mailService.sendMail(emailRequestDto);
         return ApiResponse.success(SuccessCode.EMAIL_SENT_SUCCESS);
+    }
+
+    @Operation(summary = "닉네임 중복 검사 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "사용 가능한 닉네임"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @PostMapping("/onboarding/nickname")
+    public ApiResponse<NicknameResponseDto> checkNicknameDuplication(@RequestBody NicknameRequestDto nicknameRequestDto) {
+        NicknameResponseDto responseDto = memberService.checkNicknameDuplication(nicknameRequestDto);
+        return ApiResponse.success(SuccessCode.AVAILABLE_NICKNAME, responseDto);
     }
 }
