@@ -3,7 +3,7 @@ package com.fullcar.member.application.member;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.member.*;
-import com.fullcar.member.presentation.member.dto.request.CompanyRequestDto;
+import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final CompanyMapper companyMapper;
     private final MemberMapper memberMapper;
 
     /**
@@ -31,9 +30,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void registerCompany(Member member, CompanyRequestDto companyRequestDto) {
-        Company company = companyMapper.toEntity(companyRequestDto);
-        findByMemberId(member.getId()).updateCompany(company);
+    public void registerOnboarding(Member member, OnboardingRequestDto onboardingRequestDto) {
+        findByMemberId(member.getId()).saveOnBoardingInfo(memberMapper.toEntity(onboardingRequestDto));
     }
 
     @Transactional(readOnly = true)
