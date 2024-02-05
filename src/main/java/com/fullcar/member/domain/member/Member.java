@@ -79,4 +79,9 @@ public class Member {
         this.gender = member.getGender();
         this.company = new Company(member.getCompany().getCompanyName(), member.getCompany().getLatitude(), member.getCompany().getLongitude());
     }
+
+    public void clearRefreshTokenAndDeviceToken() {
+        this.deviceToken = null;
+        this.refreshToken = null;
+    }
 }

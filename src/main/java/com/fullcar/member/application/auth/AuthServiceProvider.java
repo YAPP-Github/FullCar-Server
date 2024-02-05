@@ -13,6 +13,7 @@ import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,5 +63,10 @@ public class AuthServiceProvider {
                 .accessToken(newAccessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void socialLogout(Member member) {
+        member.clearRefreshTokenAndDeviceToken();
     }
 }

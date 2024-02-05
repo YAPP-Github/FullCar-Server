@@ -15,7 +15,8 @@ public enum SuccessCode {
     SIGNIN_SUCCESS(OK, "소셜로그인 성공"),
     GET_NEW_TOKEN_SUCCESS(OK, "토큰 재발급 성공"),
     READ_SUCCESS(OK, "조회 성공"),
-    EMAIL_SENT_SUCCESS(OK, "인증메일 발송 성공");
+    EMAIL_SENT_SUCCESS(OK, "인증메일 발송 성공"),
+    LOGOUT_SUCCESS(OK, "로그아웃 성공");
 
     private final HttpStatus status;
     private final String message;
