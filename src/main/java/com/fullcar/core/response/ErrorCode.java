@@ -16,6 +16,7 @@ public enum ErrorCode {
     EMAIL_ADDRESS_IN_BLACKLIST(BAD_REQUEST, "블랙리스트에 있는 이메일 주소입니다."),
     CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
+    DUPLICATED_NICKNAME(BAD_REQUEST, "중복된 닉네임 입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),

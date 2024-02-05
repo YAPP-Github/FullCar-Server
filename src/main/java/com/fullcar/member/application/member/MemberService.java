@@ -1,10 +1,13 @@
 package com.fullcar.member.application.member;
 
+import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.member.*;
+import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
+import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +40,16 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberGetResponseDto getMember(Member member) {
         return memberMapper.toDto(member);
+    }
+
+    @Transactional(readOnly = true)
+    public NicknameResponseDto checkNicknameDuplication(NicknameRequestDto nicknameRequestDto) {
+        if (memberRepository.existsByNickname(nicknameRequestDto.getNickname()))
+            throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+        else  {
+            return NicknameResponseDto.builder()
+                    .nickname(nicknameRequestDto.getNickname())
+                    .build();
+        }
     }
 }

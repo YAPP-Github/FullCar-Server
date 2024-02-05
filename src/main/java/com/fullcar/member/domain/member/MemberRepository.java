@@ -22,6 +22,8 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
 
     Optional<Member> findByRefreshToken(String refreshToken);
 
+    boolean existsByNickname(String nickname);
+
     default Member findByIdAndIsDeletedOrThrow(MemberId id, boolean isDeleted) {
         return findByIdAndIsDeleted(id, isDeleted)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_USER));
