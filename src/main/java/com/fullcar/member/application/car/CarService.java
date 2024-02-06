@@ -30,8 +30,7 @@ public class CarService {
             throw new CustomException(ErrorCode.EXISTED_CAR_IN_MEMBER);
         }
 
-        Member updatedMember = member.updateCarInformation(car.getCarId());
-        memberRepository.saveAndFlush(updatedMember);
+        memberRepository.saveAndFlush(member.addCarInformation(car.getCarId()));
 
         return carMapper.toDto(
                 carRepository.saveAndFlush(car)

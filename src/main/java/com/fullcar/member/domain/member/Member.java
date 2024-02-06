@@ -69,7 +69,7 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
-    public Member updateCarInformation(CarId carId) {
+    public Member addCarInformation(CarId carId) {
         this.carId = carId;
         return this;
     }
