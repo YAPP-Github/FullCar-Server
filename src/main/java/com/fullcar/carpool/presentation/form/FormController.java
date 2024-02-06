@@ -58,8 +58,23 @@ public class FormController {
             @CurrentMember Member member
     ) {
         return ApiResponse.success(
-                SuccessCode.REGISTER_SUCCESS,
+                SuccessCode.READ_SUCCESS,
                 formService.readSentForm(member)
+        );
+    }
+
+    @Operation(summary = "받은 신청서 목록 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("/received-forms")
+    public ApiResponse<List<FormResponseDto>> getReceivedForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member
+    ) {
+        return ApiResponse.success(
+                SuccessCode.READ_SUCCESS,
+                formService.readReceivedForm(member)
         );
     }
 }

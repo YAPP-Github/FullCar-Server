@@ -11,6 +11,7 @@ import com.fullcar.carpool.presentation.form.dto.response.FormResponseDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.MemberRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class FormService {
     private final FormRepository formRepository;
     private  final CarpoolRepository carpoolRepository;
+    private final MemberRepository memberRepository; //TODO: Event 기반으로 변경 필요.
     private final FormMapper formMapper;
 
     @Transactional
@@ -66,7 +68,18 @@ public class FormService {
                 false
         ).stream()
                 .map(form -> formMapper.toDto(form, member))
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<FormResponseDto> readReceivedForm(Member member) {
+        return formRepository.findReceivedForm(member.getId().getId())
+                .stream()
+                .map(form -> formMapper.toDto(
+                        form,
+                        memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false)) // TODO: N+1 문제 해결 필요.
+                )
+                .toList();
     }
 
 }
