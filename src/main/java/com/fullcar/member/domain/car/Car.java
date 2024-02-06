@@ -1,5 +1,6 @@
 package com.fullcar.member.domain.car;
 
+import com.fullcar.member.presentation.car.dto.request.CarRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -50,4 +51,12 @@ public class Car {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public Car updateCar(CarRequestDto carUpdateRequestDto) {
+        this.carNo = carUpdateRequestDto.getCarNo();
+        this.carName = carUpdateRequestDto.getCarName();
+        this.carBrand = carUpdateRequestDto.getCarBrand();
+        this.carColor = carUpdateRequestDto.getCarColor();
+        return this;
+    }
 }

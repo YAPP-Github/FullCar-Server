@@ -4,6 +4,7 @@ import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.auth.SocialId;
+import com.fullcar.member.domain.car.CarId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,8 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
 
     boolean existsByNickname(String nickname);
 
+    Optional<Member> findByCarId(CarId carId);
+
     default Member findByIdAndIsDeletedOrThrow(MemberId id, boolean isDeleted) {
         return findByIdAndIsDeleted(id, isDeleted)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_USER));
@@ -32,5 +35,10 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
     default Member findByRefreshTokenOrThrow(String refreshToken) {
         return findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.INVALID_MEMBER));
+    }
+
+    default void existsByCarIdOrThrow(CarId carId) {
+        findByCarId(carId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EXISTED_CAR_IN_MEMBER));
     }
 }
