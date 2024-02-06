@@ -1,9 +1,11 @@
 package com.fullcar.member.presentation.auth;
 
+import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.auth.AuthService;
 import com.fullcar.member.application.auth.AuthServiceProvider;
+import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.request.AuthTokenRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
@@ -52,5 +54,17 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AuthTokenResponseDto> getNewToken(@RequestBody AuthTokenRequestDto authTokenRequestDto) {
         return ApiResponse.success(SuccessCode.GET_NEW_TOKEN_SUCCESS, authServiceProvider.getNewToken(authTokenRequestDto.getRefreshToken()));
+    }
+
+    @Operation(summary = "로그아웃 API")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Object> socialLogout(@CurrentMember Member member) {
+        authServiceProvider.socialLogout(member);
+        return ApiResponse.success(SuccessCode.LOGOUT_SUCCESS);
     }
 }

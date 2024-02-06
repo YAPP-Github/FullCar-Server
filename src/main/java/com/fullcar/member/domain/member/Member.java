@@ -53,7 +53,7 @@ public class Member {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "device_token", nullable = false)
+    @Column(name = "device_token")
     private String deviceToken;
 
     @Column(name = "created_at")
@@ -78,5 +78,10 @@ public class Member {
         this.nickname = member.getNickname();
         this.gender = member.getGender();
         this.company = new Company(member.getCompany().getCompanyName(), member.getCompany().getLatitude(), member.getCompany().getLongitude());
+    }
+
+    public void clearRefreshTokenAndDeviceToken() {
+        this.deviceToken = null;
+        this.refreshToken = null;
     }
 }
