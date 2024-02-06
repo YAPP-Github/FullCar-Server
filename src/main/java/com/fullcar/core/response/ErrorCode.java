@@ -17,6 +17,7 @@ public enum ErrorCode {
     CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
     DUPLICATED_NICKNAME(BAD_REQUEST, "중복된 닉네임 입니다."),
+    EXISTED_CAR_IN_MEMBER(BAD_REQUEST, "이미 차량이 등록되었습니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),
