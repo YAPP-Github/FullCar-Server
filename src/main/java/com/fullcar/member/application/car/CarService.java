@@ -1,11 +1,13 @@
 package com.fullcar.member.application.car;
 
+import com.fullcar.core.exception.CustomException;
+import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.car.Car;
 import com.fullcar.member.domain.car.CarRepository;
-import com.fullcar.member.presentation.car.dto.CarDto;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.presentation.car.dto.request.CarUpdateRequestDto;
+import com.fullcar.member.presentation.car.dto.request.CarRequestDto;
+import com.fullcar.member.presentation.car.dto.response.CarResponseDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,15 @@ public class CarService {
     private final CarMapper carMapper;
 
     @Transactional
-    public CarDto registerCar(Member member, CarDto carDto) {
-        Car car = carMapper.toEntity(carDto);
+    public CarResponseDto registerCar(Member member, CarRequestDto carRequestDto) {
+        Car car = carMapper.toEntity(carRequestDto);
 
-        // 존재하는 유저인지
-        memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false);
-        // 해당 유저에 차량이 등록되어 있는지
-        memberRepository.existsByCarIdOrThrow(car.getCarId());
-        member.updateCarInformation(car.getCarId());
+        if (memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false).getCarId() != null) {
+            throw new CustomException(ErrorCode.EXISTED_CAR_IN_MEMBER);
+        }
+
+        Member updatedMember = member.updateCarInformation(car.getCarId());
+        memberRepository.saveAndFlush(updatedMember);
 
         return carMapper.toDto(
                 carRepository.saveAndFlush(car)
@@ -36,15 +39,15 @@ public class CarService {
     }
 
     @Transactional(readOnly = true)
-    public CarDto getCar(Member member) {
+    public CarResponseDto getCar(Member member) {
         Car car = carRepository.findByCarIdAndIsDeletedOrThrow(member.getCarId(), false);
         return carMapper.toDto(car);
     }
 
     @Transactional
-    public void updateCar(Member member, CarUpdateRequestDto carUpdateRequestDto) {
+    public void updateCar(Member member, CarRequestDto carRequestDto) {
         Car car = carRepository.findByCarIdAndIsDeletedOrThrow(member.getCarId(), false);
-        Car updatedCar = car.updateCar(carUpdateRequestDto);
+        Car updatedCar = car.updateCar(carRequestDto);
         carRepository.saveAndFlush(updatedCar);
     }
 }

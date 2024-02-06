@@ -1,13 +1,20 @@
-package com.fullcar.member.presentation.car.dto.request;
+package com.fullcar.member.presentation.car.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CarUpdateRequestDto {
+@Schema(description = "차량 응답 모델")
+public class CarResponseDto {
+    @Schema(description = "차량 id")
+    private Long id;
 
     @Schema(description = "차량번호", example = "23루 1234")
     private String carNo;

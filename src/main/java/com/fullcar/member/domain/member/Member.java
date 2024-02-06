@@ -69,8 +69,9 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
-    public void updateCarInformation(CarId carId) {
+    public Member updateCarInformation(CarId carId) {
         this.carId = carId;
+        return this;
     }
 
     public void saveOnBoardingInfo(Member member) {

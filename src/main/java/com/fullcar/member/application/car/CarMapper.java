@@ -2,7 +2,8 @@ package com.fullcar.member.application.car;
 
 import com.fullcar.member.domain.car.Car;
 import com.fullcar.member.domain.car.service.CarIdService;
-import com.fullcar.member.presentation.car.dto.CarDto;
+import com.fullcar.member.presentation.car.dto.request.CarRequestDto;
+import com.fullcar.member.presentation.car.dto.response.CarResponseDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class CarMapper {
     private final CarIdService carIdService;
 
-    public CarDto toDto(Car car) {
-        return CarDto.builder()
+    public CarResponseDto toDto(Car car) {
+        return CarResponseDto.builder()
                 .id(car.getCarId().getId())
                 .carNo(car.getCarNo())
                 .carBrand(car.getCarBrand())
@@ -22,13 +23,13 @@ public class CarMapper {
                 .build();
     }
 
-    public Car toEntity(CarDto carDto) {
+    public Car toEntity(CarRequestDto carRequestDto) {
         return Car.builder()
                 .carId(carIdService.nextId())
-                .carNo(carDto.getCarNo())
-                .carBrand(carDto.getCarBrand())
-                .carName(carDto.getCarName())
-                .carColor(carDto.getCarColor())
+                .carNo(carRequestDto.getCarNo())
+                .carBrand(carRequestDto.getCarBrand())
+                .carName(carRequestDto.getCarName())
+                .carColor(carRequestDto.getCarColor())
                 .build();
     }
 }
