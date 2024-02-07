@@ -6,10 +6,10 @@ import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.BadRequestException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.application.member.MemberMapper;
 import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
-import com.fullcar.member.domain.member.service.MemberIdService;
 import com.fullcar.member.domain.member.MemberRepository;
 import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -37,12 +38,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AppleAuthService implements AuthService {
 
+    @Value("${apple.client-id}")
+    private String clientId;
+
+    @Value("${apple.iss}")
+    private String iss;
+
     private final ObjectMapper objectMapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-    private final MemberIdService memberIdService;
+    private final MemberMapper memberMapper;
     private final SocialIdService socialIdService;
-    private final AppleProperties appleProperties;
 
     @Override
     @Transactional
@@ -73,17 +79,13 @@ public class AppleAuthService implements AuthService {
 
     // 새로운 멤버 생성
     private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        memberRepository.save(Member.builder()
-                .id(memberIdService.nextId())
-                .socialId(socialId)
-                .deviceToken(deviceToken)
-                .refreshToken(refreshToken)
-                .build());
+        Member member = memberMapper.toLoginEntity(socialId, deviceToken, refreshToken);
+        memberRepository.saveAndFlush(member);
     }
 
     // Claim 검증
     private void validateClaims(Claims claims) {
-        if (!claims.getIssuer().contains(appleProperties.getIss()) || !claims.getAudience().equals(appleProperties.getClientId())) {
+        if (!claims.getIssuer().contains(iss) || !claims.getAudience().equals(clientId)) {
             throw new UnauthorizedException(ErrorCode.INVALID_CLAIMS);
         }
     }
