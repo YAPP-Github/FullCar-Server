@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Schema(description = "신청서 응답 모델")
+@Schema(description = "신청서 List 응답 모델")
 public class FormResponseDto {
     @Schema(description = "신청서 id")
     private Long id;
@@ -29,9 +29,6 @@ public class FormResponseDto {
     @Schema(description = "희망비용(가격)")
     private Long money;
 
-    @Schema(description = "운전자에게 전할 말")
-    private String content;
-
     @Schema(description = "신청서 상태")
     private FormState formState;
 
@@ -43,4 +40,20 @@ public class FormResponseDto {
 
     @Schema(description = "생성 Timestamp")
     private LocalDateTime createdAt;
+
+    @Getter
+    @SuperBuilder
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Schema(description = "신청서 Detail 응답 모델")
+    public static class FormDetailDto extends FormResponseDto {
+        @Schema(description = "운전자에게 전할 말")
+        private String content;
+
+        @Schema(description = "신청서 결과 메시지")
+        String resultMessage;
+
+        @Schema(description = "카풀 id")
+        Long carpoolId;
+    }
 }

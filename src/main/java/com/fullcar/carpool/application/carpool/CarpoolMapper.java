@@ -33,8 +33,8 @@ public class CarpoolMapper {
                 .build();
     }
 
-    public CarpoolResponseDto.CarpoolDetailDTO toDetailDto(Carpool carpool, Member member, Car car) {
-        return CarpoolResponseDto.CarpoolDetailDTO.builder()
+    public CarpoolResponseDto.CarpoolDetailDtO toDetailDto(Carpool carpool, Member member, Car car) {
+        return CarpoolResponseDto.CarpoolDetailDtO.builder()
                 .id(carpool.getCarpoolId().getId())
                 .pickupLocation(carpool.getPickupLocation())
                 .periodType(carpool.getCost().getPeriodType())

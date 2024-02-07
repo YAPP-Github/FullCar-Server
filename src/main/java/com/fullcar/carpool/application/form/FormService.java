@@ -4,6 +4,7 @@ import com.fullcar.carpool.domain.carpool.Carpool;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
 import com.fullcar.carpool.domain.form.Form;
+import com.fullcar.carpool.domain.form.FormId;
 import com.fullcar.carpool.domain.form.FormRepository;
 import com.fullcar.carpool.domain.form.Passenger;
 import com.fullcar.carpool.presentation.form.dto.request.FormRequestDto;
@@ -60,7 +61,7 @@ public class FormService {
     }
 
     @Transactional(readOnly = true)
-    public List<FormResponseDto> readSentForm(Member member) {
+    public List<FormResponseDto> readSentFormList(Member member) {
         return formRepository.findAllByPassengerAndIsDeletedOrderByCreatedAtDesc(
                 Passenger.builder()
                         .memberId(member.getId())
@@ -72,7 +73,15 @@ public class FormService {
     }
 
     @Transactional(readOnly = true)
-    public List<FormResponseDto> readReceivedForm(Member member) {
+    public FormResponseDto.FormDetailDto readSentForm(Member member, FormId formId) {
+        return formMapper.toDetailDto(
+                formRepository.findByFormIdAndIsDeletedOrThrow(formId, false),
+                member
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<FormResponseDto> readReceivedFormList(Member member) {
         return formRepository.findReceivedForm(member.getId().getId())
                 .stream()
                 .map(form -> formMapper.toDto(
