@@ -65,7 +65,7 @@ public class CarpoolController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping("/{carpoolId}")
-    public ApiResponse<CarpoolResponseDto.CarpoolDetailDTO> getCarpool(
+    public ApiResponse<CarpoolResponseDto.CarpoolDetailDtO> getCarpool(
             @Parameter(hidden = true)
             @CurrentMember Member member,
             @PathVariable Long carpoolId

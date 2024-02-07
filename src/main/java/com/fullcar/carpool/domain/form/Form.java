@@ -34,6 +34,9 @@ public class Form {
     @Builder.Default
     private FormState formState = FormState.REQUEST;
 
+    @Column(name = "result_message")
+    private String resultMessage;
+
     @Embedded
     private Passenger passenger;
 

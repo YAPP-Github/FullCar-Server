@@ -2,6 +2,7 @@ package com.fullcar.carpool.presentation.form;
 
 import com.fullcar.carpool.application.form.FormService;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.domain.form.FormId;
 import com.fullcar.carpool.presentation.form.dto.request.FormRequestDto;
 import com.fullcar.carpool.presentation.form.dto.response.FormResponseDto;
 import com.fullcar.core.annotation.CurrentMember;
@@ -53,13 +54,30 @@ public class FormController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping("/sent-forms")
-    public ApiResponse<List<FormResponseDto>> getSentForm(
+    public ApiResponse<List<FormResponseDto>> getSentFormList(
             @Parameter(hidden = true)
             @CurrentMember Member member
     ) {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
-                formService.readSentForm(member)
+                formService.readSentFormList(member)
+        );
+    }
+
+    @Operation(summary = "보낸 신청서 상세 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("/sent-forms/{formId}")
+    public ApiResponse<FormResponseDto.FormDetailDto> getSentForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @Parameter(description = "신청서 id", required = true)
+            @PathVariable Long formId
+    ) {
+        return ApiResponse.success(
+                SuccessCode.READ_SUCCESS,
+                formService.readSentForm(member, new FormId(formId))
         );
     }
 
@@ -68,13 +86,13 @@ public class FormController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping("/received-forms")
-    public ApiResponse<List<FormResponseDto>> getReceivedForm(
+    public ApiResponse<List<FormResponseDto>> getReceivedFormList(
             @Parameter(hidden = true)
             @CurrentMember Member member
     ) {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
-                formService.readReceivedForm(member)
+                formService.readReceivedFormList(member)
         );
     }
 }

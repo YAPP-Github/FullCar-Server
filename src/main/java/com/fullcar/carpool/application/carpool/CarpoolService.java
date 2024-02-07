@@ -54,7 +54,7 @@ public class CarpoolService {
     }
 
     @Transactional(readOnly = true)
-    public CarpoolResponseDto.CarpoolDetailDTO getCarpool(Member member, CarpoolId carpoolId) {
+    public CarpoolResponseDto.CarpoolDetailDtO getCarpool(Member member, CarpoolId carpoolId) {
         Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeleted(carpoolId, false)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_CARPOOL));
 

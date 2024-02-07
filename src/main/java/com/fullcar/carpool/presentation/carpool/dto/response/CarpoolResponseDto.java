@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Schema(description = "카풀 응답 모델")
+@Schema(description = "카풀 List 응답 모델")
 public class CarpoolResponseDto {
 
     @Schema(description = "카풀 id")
@@ -55,8 +55,8 @@ public class CarpoolResponseDto {
     @SuperBuilder
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @Schema(description = "카풀 응답 모델")
-    public static class CarpoolDetailDTO extends CarpoolResponseDto {
+    @Schema(description = "카풀 Detail 응답 모델")
+    public static class CarpoolDetailDtO extends CarpoolResponseDto {
 
         @Schema(description = "닉네임")
         private String nickname;

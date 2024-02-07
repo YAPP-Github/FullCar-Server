@@ -23,11 +23,26 @@ public class FormMapper {
                 .pickupLocation(form.getPickupLocation())
                 .periodType(form.getCost().getPeriodType())
                 .money(form.getCost().getMoney())
-                .content(form.getContent())
                 .formState(form.getFormState())
                 .companyName(member.getCompany().getCompanyName())
                 .nickname(member.getNickname())
                 .createdAt(form.getCreatedAt())
+                .build();
+    }
+
+    public FormResponseDto.FormDetailDto toDetailDto(Form form, Member member) {
+        return FormResponseDto.FormDetailDto.builder()
+                .id(form.getFormId().getId())
+                .pickupLocation(form.getPickupLocation())
+                .periodType(form.getCost().getPeriodType())
+                .money(form.getCost().getMoney())
+                .formState(form.getFormState())
+                .companyName(member.getCompany().getCompanyName())
+                .nickname(member.getNickname())
+                .createdAt(form.getCreatedAt())
+                .content(form.getContent())
+                .resultMessage(form.getResultMessage())
+                .carpoolId(form.getCarpoolId().getId())
                 .build();
     }
 
