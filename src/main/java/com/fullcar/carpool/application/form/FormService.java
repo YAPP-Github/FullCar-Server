@@ -73,7 +73,7 @@ public class FormService {
     }
 
     @Transactional(readOnly = true)
-    public FormResponseDto.FormDetailDto readSentForm(Member member, FormId formId) {
+    public FormResponseDto.FormDetailDto readForm(Member member, FormId formId) {
         return formMapper.toDetailDto(
                 formRepository.findByFormIdAndIsDeletedOrThrow(formId, false),
                 member
