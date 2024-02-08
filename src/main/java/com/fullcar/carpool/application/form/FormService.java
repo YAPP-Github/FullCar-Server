@@ -89,15 +89,22 @@ public class FormService {
     }
 
     @Transactional
-    public FormResponseDto.FormDetailDto updateForm(FormId formId, FormUpdateDto formUpdateDto) {
+    public FormResponseDto.FormDetailDto updateForm(Member member, FormId formId, FormUpdateDto formUpdateDto) {
         Form form = formRepository.findByFormIdAndIsDeletedOrThrow(formId, false);
         form.changeFormState(formUpdateDto);
 
-        Member member = memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false);
+        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(form.getCarpoolId(), false);
+
+        if (!carpool.isMyCarpool(member.getId())) {
+            throw new CustomException(ErrorCode.CANNOT_CHANGE_FORM_STATE);
+        }
 
         return formMapper.toDetailDto(
                 formRepository.saveAndFlush(form),
-                member
+                memberRepository.findByIdAndIsDeletedOrThrow(
+                        form.getPassenger().getMemberId(),
+                        false
+                )
         );
     }
 

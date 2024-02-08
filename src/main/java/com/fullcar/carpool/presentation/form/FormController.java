@@ -95,12 +95,14 @@ public class FormController {
         );
     }
 
-    @Operation(summary = "신청서 수락/거절 API")
+    @Operation(summary = "신청서 상태변경 API")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수락/거절 성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공")
     })
     @PatchMapping("/forms/{formId}")
     public ApiResponse<FormResponseDto.FormDetailDto> patchForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
             @Parameter(description = "신청서 id", required = true)
             @PathVariable Long formId,
             @Parameter(description = "신청서 상태변경 모델", required = true)
@@ -108,7 +110,7 @@ public class FormController {
             ) {
         return ApiResponse.success(
                 SuccessCode.UPDATE_SUCCESS,
-                formService.updateForm(new FormId(formId), formUpdateDto)
+                formService.updateForm(member, new FormId(formId), formUpdateDto)
         );
     }
 }

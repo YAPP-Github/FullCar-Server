@@ -18,6 +18,8 @@ public enum ErrorCode {
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
     DUPLICATED_NICKNAME(BAD_REQUEST, "중복된 닉네임 입니다."),
     EXISTED_CAR_IN_MEMBER(BAD_REQUEST, "이미 차량이 등록되었습니다."),
+    CANNOT_CHANGE_FORM_STATE(BAD_REQUEST, "카풀에 등록된 운전자만 신청서 수락/거절을 할 수 있습니다."),
+    INVALID_FORM_STATE(BAD_REQUEST, "유효하지 않은 신청서 상태입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),
