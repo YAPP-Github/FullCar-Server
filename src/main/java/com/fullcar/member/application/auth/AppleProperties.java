@@ -1,12 +1,13 @@
 package com.fullcar.member.application.auth;
 
-import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "apple")
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AppleProperties {
     private String teamId;
     private String keyId;

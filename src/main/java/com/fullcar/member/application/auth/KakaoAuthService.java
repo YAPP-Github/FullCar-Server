@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.application.member.MemberMapper;
 import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
-import com.fullcar.member.domain.member.service.MemberIdService;
 import com.fullcar.member.domain.member.MemberRepository;
 import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
@@ -34,8 +34,8 @@ public class KakaoAuthService implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
-    private final MemberIdService memberIdService;
     private final SocialIdService socialIdService;
+    private final MemberMapper memberMapper;
 
     @Override
     @Transactional
@@ -86,11 +86,7 @@ public class KakaoAuthService implements AuthService {
 
     // 새로운 멤버 생성
     private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        memberRepository.save(Member.builder()
-                .id(memberIdService.nextId())
-                .socialId(socialId)
-                .deviceToken(deviceToken)
-                .refreshToken(refreshToken)
-                .build());
+        Member member = memberMapper.toLoginEntity(socialId, deviceToken, refreshToken);
+        memberRepository.saveAndFlush(member);
     }
 }
