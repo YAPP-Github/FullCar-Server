@@ -3,11 +3,9 @@ package com.fullcar.carpool.application.form;
 import com.fullcar.carpool.domain.carpool.Carpool;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
-import com.fullcar.carpool.domain.form.Form;
-import com.fullcar.carpool.domain.form.FormId;
-import com.fullcar.carpool.domain.form.FormRepository;
-import com.fullcar.carpool.domain.form.Passenger;
+import com.fullcar.carpool.domain.form.*;
 import com.fullcar.carpool.presentation.form.dto.request.FormRequestDto;
+import com.fullcar.carpool.presentation.form.dto.request.FormUpdateDto;
 import com.fullcar.carpool.presentation.form.dto.response.FormResponseDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
@@ -21,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -73,11 +70,11 @@ public class FormService {
     }
 
     @Transactional(readOnly = true)
-    public FormResponseDto.FormDetailDto readForm(Member member, FormId formId) {
-        return formMapper.toDetailDto(
-                formRepository.findByFormIdAndIsDeletedOrThrow(formId, false),
-                member
-        );
+    public FormResponseDto.FormDetailDto readForm(FormId formId) {
+        Form form = formRepository.findByFormIdAndIsDeletedOrThrow(formId, false);
+        Member member = memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false);
+
+        return formMapper.toDetailDto(form, member);
     }
 
     @Transactional(readOnly = true)
@@ -89,6 +86,19 @@ public class FormService {
                         memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false)) // TODO: N+1 문제 해결 필요.
                 )
                 .toList();
+    }
+
+    @Transactional
+    public FormResponseDto.FormDetailDto updateForm(FormId formId, FormUpdateDto formUpdateDto) {
+        Form form = formRepository.findByFormIdAndIsDeletedOrThrow(formId, false);
+        form.changeFormState(formUpdateDto);
+
+        Member member = memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false);
+
+        return formMapper.toDetailDto(
+                formRepository.saveAndFlush(form),
+                member
+        );
     }
 
 }

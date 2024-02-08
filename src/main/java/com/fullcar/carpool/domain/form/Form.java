@@ -1,6 +1,7 @@
 package com.fullcar.carpool.domain.form;
 
 import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.presentation.form.dto.request.FormUpdateDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "form")
 public class Form {
+    private static final String REJECT_MESSAGE = "카풀 매칭에 실패했어. 다른 카풀을 찾아보세요!";
 
     @EmbeddedId
     private FormId formId;
@@ -55,4 +57,24 @@ public class Form {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void changeFormState(FormUpdateDto formUpdateDto) {
+        FormState formState = formUpdateDto.getFormState();
+
+        if (formState == FormState.ACCEPT) {
+            this.accept(formUpdateDto.getContact(), formUpdateDto.getToPassenger());
+        }
+        else if (formState == FormState.REJECT) {
+            this.reject();
+        }
+    }
+    public void accept(String contact, String toPassenger) {
+        this.formState = FormState.ACCEPT;
+        this.resultMessage = contact + "\n" + toPassenger;
+    }
+
+    public void reject() {
+        this.formState = FormState.REJECT;
+        this.resultMessage = REJECT_MESSAGE;
+    }
 }
