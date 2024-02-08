@@ -64,23 +64,6 @@ public class FormController {
         );
     }
 
-    @Operation(summary = "보낸 신청서 상세 조회 API")
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
-    })
-    @GetMapping("/sent-forms/{formId}")
-    public ApiResponse<FormResponseDto.FormDetailDto> getSentForm(
-            @Parameter(hidden = true)
-            @CurrentMember Member member,
-            @Parameter(description = "신청서 id", required = true)
-            @PathVariable Long formId
-    ) {
-        return ApiResponse.success(
-                SuccessCode.READ_SUCCESS,
-                formService.readSentForm(member, new FormId(formId))
-        );
-    }
-
     @Operation(summary = "받은 신청서 목록 조회 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
@@ -93,6 +76,23 @@ public class FormController {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
                 formService.readReceivedFormList(member)
+        );
+    }
+
+    @Operation(summary = "신청서 상세 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("/forms/{formId}")
+    public ApiResponse<FormResponseDto.FormDetailDto> getForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @Parameter(description = "신청서 id", required = true)
+            @PathVariable Long formId
+    ) {
+        return ApiResponse.success(
+                SuccessCode.READ_SUCCESS,
+                formService.readForm(member, new FormId(formId))
         );
     }
 }
