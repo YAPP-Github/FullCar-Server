@@ -4,6 +4,7 @@ import com.fullcar.carpool.application.form.FormService;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.form.FormId;
 import com.fullcar.carpool.presentation.form.dto.request.FormRequestDto;
+import com.fullcar.carpool.presentation.form.dto.request.FormUpdateDto;
 import com.fullcar.carpool.presentation.form.dto.response.FormResponseDto;
 import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
@@ -85,14 +86,33 @@ public class FormController {
     })
     @GetMapping("/forms/{formId}")
     public ApiResponse<FormResponseDto.FormDetailDto> getForm(
-            @Parameter(hidden = true)
-            @CurrentMember Member member,
             @Parameter(description = "신청서 id", required = true)
             @PathVariable Long formId
     ) {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
-                formService.readForm(member, new FormId(formId))
+                formService.readForm(new FormId(formId))
+        );
+    }
+
+    @Operation(summary = "신청서 상태변경 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "카풀에 등록된 운전자만 신청서 수락/거절을 할 수 있습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 신청서 상태입니다.")
+    })
+    @PatchMapping("/forms/{formId}")
+    public ApiResponse<FormResponseDto.FormDetailDto> patchForm(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @Parameter(description = "신청서 id", required = true)
+            @PathVariable Long formId,
+            @Parameter(description = "신청서 상태변경 모델", required = true)
+            @RequestBody FormUpdateDto formUpdateDto
+            ) {
+        return ApiResponse.success(
+                SuccessCode.UPDATE_SUCCESS,
+                formService.updateForm(member, new FormId(formId), formUpdateDto)
         );
     }
 }

@@ -2,6 +2,7 @@ package com.fullcar.carpool.presentation.form.dto.response;
 
 import com.fullcar.carpool.domain.carpool.PeriodType;
 import com.fullcar.carpool.domain.form.FormState;
+import com.fullcar.carpool.domain.form.ResultMessage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class FormResponseDto {
         private String content;
 
         @Schema(description = "신청서 결과 메시지")
-        String resultMessage;
+        ResultMessage resultMessage;
 
         @Schema(description = "카풀 id")
         Long carpoolId;
