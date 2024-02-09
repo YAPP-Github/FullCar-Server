@@ -33,7 +33,10 @@ public enum ErrorCode {
     NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다."),
     NOT_EXIST_CARPOOL(NOT_FOUND, "존재하지 않는 카풀입니다."),
     NOT_EXIST_CAR(NOT_FOUND, "존재하지 않는 차량입니다."),
-    NOT_EXIST_FORM(NOT_FOUND, "존재하지 않는 신청서입니다.");
+    NOT_EXIST_FORM(NOT_FOUND, "존재하지 않는 신청서입니다."),
+
+    /* 500 INTERNAL SERVER ERROR */
+    FAILED_TO_SEND_NOTIFICATION(INTERNAL_SERVER_ERROR, "푸시알림 전송 실패");
 
     private final HttpStatus status;
     private final String message;

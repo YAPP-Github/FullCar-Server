@@ -73,6 +73,7 @@ public class Form {
             throw new CustomException(ErrorCode.INVALID_FORM_STATE);
         }
     }
+
     public void accept(String contact, String toPassenger) {
         this.formState = FormState.ACCEPT;
         this.resultMessage = ResultMessage.builder()
