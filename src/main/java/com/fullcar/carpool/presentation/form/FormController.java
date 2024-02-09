@@ -97,7 +97,9 @@ public class FormController {
 
     @Operation(summary = "신청서 상태변경 API")
     @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "카풀에 등록된 운전자만 신청서 수락/거절을 할 수 있습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "유효하지 않은 신청서 상태입니다.")
     })
     @PatchMapping("/forms/{formId}")
     public ApiResponse<FormResponseDto.FormDetailDto> patchForm(
