@@ -24,5 +24,5 @@ public class Mail {
     @AttributeOverride(name = "id", column = @Column(name = "member_id"))
     private MemberId memberId;
 
-    private String code;
+    private Integer code;
 }

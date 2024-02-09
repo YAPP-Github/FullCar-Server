@@ -10,26 +10,14 @@
     <div class="logo">
         <img src="cid:image" alt="Fullcar 로고">
     </div>
-    <p style="margin-top: 20px; padding: 0;">안녕하세요.</p><br>
-    <p style="margin-top: 10px;">회사 메일 인증을 통한 안전한 <span class="highlight" style="color: #6C7AF1; font-weight: bold;">카풀 서비스 풀카</span>입니다.</p>
-    <p style="margin-top: 10px; margin-bottom: 10px;">풀카 이용을 위해 <span class="highlight" style="color: #6C7AF1; font-weight: bold;">아래 버튼을 클릭</span>해 인증을 진행해 주세요.</p>
+    <p style="margin-top: 20px; margin-bottom: 20px; padding: 0;">안녕하세요.</p>
 
-    <script th:inline="javascript">
-        $("#bt").click(function() {
-            alert('성공');
-        });
+    <div>
+    <p style="line-height: 30%;">회사 메일 인증을 통한 안전한 <span class="highlight" style="color: #6C7AF1; font-weight: bold;">카풀 서비스 풀카</span>입니다.</p>
+    <p style="line-height: 170%;">아래 <span class="highlight" style="color: #6C7AF1; font-weight: bold;">인증 번호</span>를 입력하여 회사 메일 인증을 완료해 주세요.</p>
+    </div>
 
-    </script>
-
-    <button type="button" id="bt" onclick="alert('성공')" style="display: inline-block; text-decoration: none; font-weight: 500;
-    color: #fff;
-    background-color: #6C7AF1;
-    padding: 15px 36px;
-    border-color: #6C7AF1;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-top: 20px;
-    transition: background-color 0.3s;">회사 메일 인증하기</button>
+    <h1 th:text="${code}"> </h1>
     <div class="help-text">
         <a href="#" style="display: block; color: #505967; margin-top: 20px; text-decoration: underline;">인증이 잘 되지 않나요?</a>
     </div>
