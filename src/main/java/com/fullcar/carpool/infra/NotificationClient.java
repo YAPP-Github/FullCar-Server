@@ -1,5 +1,6 @@
-package com.fullcar.carpool.application.Alarm;
+package com.fullcar.carpool.infra;
 
+import com.fullcar.carpool.domain.service.NotificationService;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class AlarmService {
-
+public class NotificationClient implements NotificationService {
     private final FirebaseMessaging firebaseMessaging;
 
+    @Override
     public void sendNotification(String nickname, String deviceToken, String title, String body) {
         Notification notification = Notification.builder()
                 .setTitle(nickname + "님! " + title)
