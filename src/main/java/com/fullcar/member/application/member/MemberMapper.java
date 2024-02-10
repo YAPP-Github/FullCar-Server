@@ -3,9 +3,7 @@ package com.fullcar.member.application.member;
 import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.member.Company;
 import com.fullcar.member.domain.member.service.MemberIdService;
-import com.fullcar.member.infra.EmailMessage;
 import com.fullcar.member.domain.member.Member;
-import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import lombok.AccessLevel;
@@ -25,13 +23,6 @@ public class MemberMapper {
                 .email(member.getEmail())
                 .gender(member.getGender())
                 .carId(member.getCarId())
-                .build();
-    }
-
-    public EmailMessage toEntity(EmailRequestDto emailRequestDto) {
-        return EmailMessage.builder()
-                .to(emailRequestDto.getEmail())
-                .subject("[FullCar] 회사 이메일 인증")
                 .build();
     }
 
