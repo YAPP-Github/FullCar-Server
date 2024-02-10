@@ -19,7 +19,7 @@ public class MemberMapper {
     public MemberGetResponseDto toDto(Member member) {
         return MemberGetResponseDto.builder()
                 .nickname(member.getNickname())
-                .companyName(member.getCompany().getCompanyName())
+                .companyName(member.getCompany() == null ? null : member.getCompany().getCompanyName())
                 .email(member.getEmail())
                 .gender(member.getGender())
                 .carId(member.getCarId())
