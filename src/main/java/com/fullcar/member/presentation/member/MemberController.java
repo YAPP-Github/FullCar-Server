@@ -6,6 +6,7 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
+import com.fullcar.member.presentation.member.dto.request.CodeRequestDto;
 import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
@@ -70,5 +71,16 @@ public class MemberController {
     public ApiResponse<NicknameResponseDto> checkNicknameDuplication(@RequestBody NicknameRequestDto nicknameRequestDto) {
         NicknameResponseDto responseDto = memberService.checkNicknameDuplication(nicknameRequestDto);
         return ApiResponse.success(SuccessCode.AVAILABLE_NICKNAME, responseDto);
+    }
+
+    @Operation(summary = "인증번호 인증 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "인증 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @PostMapping("/onboarding/company/email/check")
+    public ApiResponse<Object> checkAuthenticationCode(@RequestBody CodeRequestDto codeRequestDto) {
+        //mailService.sendMail(codeRequestDto);
+        return ApiResponse.success(SuccessCode.EMAIL_SENT_SUCCESS);
     }
 }
