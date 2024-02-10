@@ -3,6 +3,11 @@ package com.fullcar.member.application.member;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.domain.car.Car;
+import com.fullcar.member.domain.car.CarId;
+import com.fullcar.member.domain.car.CarRepository;
+import com.fullcar.member.domain.mail.Mail;
+import com.fullcar.member.domain.mail.MailRepository;
 import com.fullcar.member.domain.member.*;
 import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
@@ -19,6 +24,8 @@ import org.springframework.validation.annotation.Validated;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
+    private final CarRepository carRepository;
+    private final MailRepository mailRepository;
 
     /**
      * 회원을 식별자로 조회합니다.
@@ -51,5 +58,26 @@ public class MemberService {
                     .nickname(nicknameRequestDto.getNickname())
                     .build();
         }
+    }
+
+    @Transactional
+    public void withdrawMember(Member member) {
+        deleteCar(member.getCarId());
+        deleteMail(member.getId());
+
+        memberRepository.saveAndFlush(member.deleted());
+
+    }
+
+    private void deleteCar(CarId carId) {
+        if (carRepository.existsByCarId(carId)) {
+            Car car = carRepository.findByCarIdAndIsDeletedOrThrow(carId, false);
+            carRepository.delete(car);
+        }
+    }
+
+    private void deleteMail(MemberId memberId) {
+        Mail mail = mailRepository.findByMemberId(memberId);
+        mailRepository.delete(mail);
     }
 }

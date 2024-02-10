@@ -65,6 +65,7 @@ public class Member {
     private LocalDateTime updatedAt;
 
     public void loginMember(String deviceToken, String refreshToken) {
+        this.isDeleted = false;
         this.deviceToken = deviceToken;
         this.refreshToken = refreshToken;
     }
@@ -84,5 +85,16 @@ public class Member {
     public void clearRefreshTokenAndDeviceToken() {
         this.deviceToken = null;
         this.refreshToken = null;
+    }
+
+    public Member deleted() {
+        this.isDeleted = true;
+        this.deviceToken = null;
+        this.refreshToken = null;
+        this.carId = null;
+        this.company = null;
+        this.email = null;
+        this.gender = null;
+        return this;
     }
 }

@@ -84,4 +84,15 @@ public class MemberController {
         mailService.checkMailAuthenticationCode(member, codeRequestDto);
         return ApiResponse.success(SuccessCode.CODE_VERIFICATION_SUCCESS);
     }
+
+    @Operation(summary = "회원 탈퇴 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @DeleteMapping()
+    public ApiResponse<Object> withdrawMember(@CurrentMember Member member) {
+        memberService.withdrawMember(member);
+        return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
+    }
 }

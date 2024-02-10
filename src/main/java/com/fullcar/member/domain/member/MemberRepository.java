@@ -17,7 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
     Optional<Member> findByIdAndIsDeleted(MemberId id, boolean isDeleted);
 
     Optional<Member> findById(MemberId id);
-    Member findBySocialIdAndIsDeleted(SocialId socialId, boolean isDeleted);
+    Member findBySocialId(SocialId socialId);
 
     boolean existsBySocialId(SocialId socialId);
 
