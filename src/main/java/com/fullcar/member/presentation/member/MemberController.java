@@ -79,8 +79,8 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/onboarding/company/email/check")
-    public ApiResponse<Object> checkAuthenticationCode(@RequestBody CodeRequestDto codeRequestDto) {
-        //mailService.sendMail(codeRequestDto);
-        return ApiResponse.success(SuccessCode.EMAIL_SENT_SUCCESS);
+    public ApiResponse<Object> checkMailAuthenticationCode(@CurrentMember Member member, @RequestBody CodeRequestDto codeRequestDto) {
+        mailService.checkMailAuthenticationCode(member, codeRequestDto);
+        return ApiResponse.success(SuccessCode.CODE_VERIFICATION_SUCCESS);
     }
 }

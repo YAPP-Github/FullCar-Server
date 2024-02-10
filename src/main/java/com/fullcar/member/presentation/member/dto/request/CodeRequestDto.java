@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CodeRequestDto {
     @Schema(description = "인증 코드", example = "1234567")
-    private String code;
+    private Integer code;
 }
