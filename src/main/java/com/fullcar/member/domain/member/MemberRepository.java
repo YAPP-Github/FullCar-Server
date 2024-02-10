@@ -36,9 +36,4 @@ public interface MemberRepository extends JpaRepository<Member, MemberId> {
         return findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new UnauthorizedException(ErrorCode.INVALID_MEMBER));
     }
-
-    default void existsByCarIdOrThrow(CarId carId) {
-        findByCarId(carId)
-                .orElseThrow(() -> new CustomException(ErrorCode.EXISTED_CAR_IN_MEMBER));
-    }
 }

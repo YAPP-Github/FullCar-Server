@@ -113,7 +113,7 @@ public class FormService {
         }
         else if (formUpdateDto.getFormState() == FormState.REJECT) {
             String title = "카풀 매칭에 실패했어요.";
-            String body = "다른 카풀을 찾아볼까요?🥹";
+            String body = "다른 카풀을 찾아볼까요?💁🏻‍♀️";
             pushNotificationClient.sendNotification(passenger.getNickname(), passenger.getDeviceToken(), title, body);
         }
 

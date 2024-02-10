@@ -18,7 +18,8 @@ public enum SuccessCode {
     EMAIL_SENT_SUCCESS(OK, "인증메일 발송 성공"),
     LOGOUT_SUCCESS(OK, "로그아웃 성공"),
     AVAILABLE_NICKNAME(OK, "사용 가능한 닉네임"),
-    UPDATE_SUCCESS(OK, "수정 성공");
+    UPDATE_SUCCESS(OK, "수정 성공"),
+    CODE_VERIFICATION_SUCCESS(OK, "인증 성공");
 
     private final HttpStatus status;
     private final String message;

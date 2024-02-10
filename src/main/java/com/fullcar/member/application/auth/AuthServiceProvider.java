@@ -28,7 +28,6 @@ public class AuthServiceProvider {
     private final AppleAuthService appleAuthService;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-    private final EntityManager entityManager;
 
     @PostConstruct
     void initializeAuthServicesMap() {

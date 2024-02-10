@@ -7,6 +7,7 @@ import com.fullcar.member.domain.blacklist.BlacklistRepository;
 import com.fullcar.member.domain.mail.MailRepository;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
+import com.fullcar.member.presentation.member.dto.request.CodeRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -65,5 +67,14 @@ public class MailClient implements MailService {
     public Integer createRandomCode() {
         Random random = new Random();
         return random.nextInt(888888) + 111111;
+    }
+
+    @Override
+    public void checkMailAuthenticationCode(Member member, CodeRequestDto codeRequestDto) {
+        Integer code = mailRepository.findByMemberId(member.getId()).getCode();
+
+        if (!Objects.equals(codeRequestDto.getCode(), code)) {
+            throw new CustomException(ErrorCode.NOT_MATCHED_CODE);
+        }
     }
 }
