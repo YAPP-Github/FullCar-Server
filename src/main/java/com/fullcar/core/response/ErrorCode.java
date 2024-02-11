@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     /* 400 BAD REQUEST */
     FAILED_TO_GENERATE_PUBLIC_KEY(BAD_REQUEST, "애플 공개키 생성 중 문제 발생"),
+    FAILED_TO_GENERATE_APPLE_TOKEN(BAD_REQUEST, "애플 access Token 생성 중 문제 발생"),
     EMAIL_ADDRESS_IN_BLACKLIST(BAD_REQUEST, "블랙리스트에 있는 이메일 주소입니다."),
     CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),

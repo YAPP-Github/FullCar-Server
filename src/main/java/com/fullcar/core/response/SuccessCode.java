@@ -12,7 +12,8 @@ public enum SuccessCode {
     REGISTER_SUCCESS(CREATED, "등록 성공"),
 
     /* 200 OK */
-    SIGNIN_SUCCESS(OK, "소셜로그인 성공"),
+    APPLE_LOGIN_SUCCESS(OK, "애플 소셜 로그인 성공"),
+    KAKAO_LOGIN_SUCCESS(OK, "카카오 소셜 로그인 성공"),
     GET_NEW_TOKEN_SUCCESS(OK, "토큰 재발급 성공"),
     READ_SUCCESS(OK, "조회 성공"),
     EMAIL_SENT_SUCCESS(OK, "인증메일 발송 성공"),

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.BadRequestException;
+import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.member.MemberMapper;
@@ -11,38 +12,54 @@ import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.AppleAuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.response.AppleAuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.bouncycastle.openssl.PEMParser;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.RSAPublicKeySpec;
-import java.util.Base64;
-import java.util.Map;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 
 @Service
 @RequiredArgsConstructor
-public class AppleAuthService implements AuthService {
+public class AppleAuthService {
+
+    @Value("${apple.team-id}")
+    private String teamId;
+
+    @Value("${apple.key-id}")
+    private String keyId;
 
     @Value("${apple.client-id}")
     private String clientId;
 
-    @Value("${apple.iss}")
-    private String iss;
+    private static final String REQUEST_TOKEN_URL = "https://appleid.apple.com/auth/oauth2/v2/token";
+    private static final String REVOKE_TOKEN_URL = "https://appleid.apple.com/auth/oauth2/v2/revoke";
 
     private final ObjectMapper objectMapper;
     private final JwtTokenProvider jwtTokenProvider;
@@ -50,11 +67,14 @@ public class AppleAuthService implements AuthService {
     private final MemberMapper memberMapper;
     private final SocialIdService socialIdService;
 
-    @Override
     @Transactional
-    public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
-        String deviceToken = authRequestDto.getDeviceToken();
-        String idToken = authRequestDto.getToken();
+    public SocialInfoResponseDto getMemberInfo(AppleAuthRequestDto appleAuthRequestDto) throws IOException {
+        String deviceToken = appleAuthRequestDto.getDeviceToken();
+        String idToken = appleAuthRequestDto.getIdToken();
+        AppleAuthTokenResponseDto responseDto = requestAppleAuthToken(appleAuthRequestDto.getAuthCode());
+        System.out.println(responseDto);
+        String appleRefreshToken = requestAppleAuthToken(appleAuthRequestDto.getAuthCode()).getRefreshToken();
+
         Map<String, String> headers = parseHeaders(idToken);
         ApplePublicKeyList applePublicKeys = getApplePublicKeyList();
         PublicKey publicKey = generatePublicKey(headers, applePublicKeys);
@@ -67,9 +87,11 @@ public class AppleAuthService implements AuthService {
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         if (memberRepository.existsBySocialId(socialId)) {
-            memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
+            Member member = memberRepository.findBySocialId(socialId);
+            member.saveAppleRefreshToken(appleRefreshToken);
+            member.loginMember(deviceToken, refreshToken);
         }
-        else createMember(socialId, deviceToken, refreshToken);
+        else createMember(socialId, appleRefreshToken, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(socialId)
@@ -78,14 +100,14 @@ public class AppleAuthService implements AuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        Member member = memberMapper.toLoginEntity(socialId, deviceToken, refreshToken);
+    private void createMember(SocialId socialId, String authCode, String deviceToken, String refreshToken) {
+        Member member = memberMapper.toAppleLoginEntity(socialId, authCode, deviceToken, refreshToken);
         memberRepository.saveAndFlush(member);
     }
 
     // Claim 검증
     private void validateClaims(Claims claims) {
-        if (!claims.getIssuer().contains(iss) || !claims.getAudience().equals(clientId)) {
+        if (!claims.getIssuer().contains("https://appleid.apple.com") || !claims.getAudience().equals(clientId)) {
             throw new UnauthorizedException(ErrorCode.INVALID_CLAIMS);
         }
     }
@@ -117,9 +139,9 @@ public class AppleAuthService implements AuthService {
 
     // apple public key 정보 가져오기
     private ApplePublicKeyList getApplePublicKeyList() {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
 
+        try {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-type", "application/json");
 
@@ -158,5 +180,73 @@ public class AppleAuthService implements AuthService {
         } catch (Exception exception) {
             throw new BadRequestException(ErrorCode.FAILED_TO_GENERATE_PUBLIC_KEY);
         }
+    }
+
+    private String createClientSecret() throws IOException {
+        Date expirationDate = Date.from(ZonedDateTime.now().plusDays(30).toInstant());
+        Map<String, Object> jwtHeader = new HashMap<>();
+        jwtHeader.put("kid", keyId);
+        jwtHeader.put("alg", "ES256");
+
+        return Jwts.builder()
+                .setHeaderParams(jwtHeader)
+                .setIssuer(teamId)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(expirationDate)
+                .setAudience("https://appleid.apple.com")
+                .setSubject("com.fullcar.app1")
+                .signWith(SignatureAlgorithm.ES256, getPrivateKey())
+                .compact();
+    }
+
+    private PrivateKey getPrivateKey() throws IOException {
+        ClassPathResource resource = new ClassPathResource("private_key.p8");
+        String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+        Reader pemReader = new StringReader(privateKey);
+        PEMParser pemParser = new PEMParser(pemReader);
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+        PrivateKeyInfo object = (PrivateKeyInfo) pemParser.readObject();
+        return converter.getPrivateKey(object);
+    }
+
+    public AppleAuthTokenResponseDto requestAppleAuthToken(String code) throws IOException {
+        try {
+        RestTemplate restTemplate = new RestTemplateBuilder().build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", "com.fullcar.app1");
+        params.add("client_secret", createClientSecret());
+        params.add("grant_type", "authorization_code");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+
+            ResponseEntity<AppleAuthTokenResponseDto> response = restTemplate.postForEntity(REQUEST_TOKEN_URL, httpEntity, AppleAuthTokenResponseDto.class);
+            System.out.println(response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new IllegalArgumentException("what");
+            //throw new CustomException(ErrorCode.FAILED_TO_GENERATE_APPLE_TOKEN);
+        }
+    }
+
+    // 회원 탈퇴
+    public void revoke(Member member) throws IOException {
+        RestTemplate restTemplate = new RestTemplateBuilder().build();
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", clientId);
+        params.add("client_secret", createClientSecret());
+        params.add("token", member.getAppleRefreshToken());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+        restTemplate.postForEntity(REVOKE_TOKEN_URL, httpEntity, AppleAuthTokenResponseDto.class);
     }
 }

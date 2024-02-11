@@ -56,6 +56,9 @@ public class Member {
     @Column(name = "device_token")
     private String deviceToken;
 
+    @Column(name = "apple_refresh_token")
+    private String appleRefreshToken;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
@@ -63,6 +66,10 @@ public class Member {
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void saveAppleRefreshToken(String appleRefreshToken) {
+        this.appleRefreshToken = appleRefreshToken;
+    }
 
     public void loginMember(String deviceToken, String refreshToken) {
         this.isDeleted = false;

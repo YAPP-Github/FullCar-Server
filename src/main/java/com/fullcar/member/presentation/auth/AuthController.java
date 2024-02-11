@@ -40,7 +40,7 @@ public class AuthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/login/apple")
-    public ApiResponse<AuthResponseDto> appleLogin(@RequestBody AppleAuthRequestDto appleAuthRequestDto) {
+    public ApiResponse<AuthResponseDto> appleLogin(@RequestBody AppleAuthRequestDto appleAuthRequestDto) throws IOException {
         SocialInfoResponseDto socialResponseDto = appleAuthService.getMemberInfo(appleAuthRequestDto);
         AuthResponseDto responseDto = authServiceProvider.socialLogin(socialResponseDto);
 

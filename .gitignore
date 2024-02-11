@@ -38,3 +38,4 @@ out/
 
 application.yml
 firebase_key.json
+private_key.p8

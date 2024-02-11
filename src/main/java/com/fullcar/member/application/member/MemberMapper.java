@@ -50,11 +50,11 @@ public class MemberMapper {
                 .build();
     }
 
-    public Member toAppleLoginEntity(SocialId socialId, String authCode, String deviceToken, String refreshToken) {
+    public Member toAppleLoginEntity(SocialId socialId, String appleRefreshToken, String deviceToken, String refreshToken) {
         return Member.builder()
                 .id(memberIdService.nextId())
                 .socialId(socialId)
-                .authCode(authCode)
+                .appleRefreshToken(appleRefreshToken)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build();

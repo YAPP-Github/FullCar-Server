@@ -6,10 +6,7 @@ import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
-import com.fullcar.member.presentation.member.dto.request.CodeRequestDto;
-import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
-import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
-import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
+import com.fullcar.member.presentation.member.dto.request.*;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -91,8 +90,8 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @DeleteMapping()
-    public ApiResponse<Object> withdrawMember(@CurrentMember Member member) {
-        memberService.withdrawMember(member);
+    public ApiResponse<Object> withdrawMember(@CurrentMember Member member, @RequestBody WithdrawRequestDto withdrawRequestDto) throws IOException {
+        memberService.withdrawMember(member, withdrawRequestDto);
         return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
     }
 }

@@ -11,7 +11,6 @@ import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,26 +21,26 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AuthServiceProvider {
-    private static final Map<MemberSocialType, AuthService> authServiceMap = new HashMap<>();
-
-    private final KakaoAuthService kakaoAuthService;
-    private final AppleAuthService appleAuthService;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
-    @PostConstruct
-    void initializeAuthServicesMap() {
-        authServiceMap.put(MemberSocialType.KAKAO, kakaoAuthService);
-        authServiceMap.put(MemberSocialType.APPLE, appleAuthService);
-    }
+//    private static final Map<MemberSocialType> authServiceMap = new HashMap<>();
+//
+//    private final KakaoAuthService kakaoAuthService;
+//    private final AppleAuthService appleAuthService;
+//
+//    @PostConstruct
+//    void initializeAuthServicesMap() {
+//        authServiceMap.put(MemberSocialType.APPLE);
+//        authServiceMap.put(MemberSocialType.KAKAO);
+//    }
 
-    public AuthService getAuthService(MemberSocialType socialType) {
-        return authServiceMap.get(socialType);
-    }
+//    public AuthService getAuthService(MemberSocialType socialType) {
+//        return authServiceMap.get(socialType);
+//    }
 
     public AuthResponseDto socialLogin(SocialInfoResponseDto socialResponseDto) {
-
-        Member member = memberRepository.findBySocialIdAndIsDeleted(socialResponseDto.getSocialId(), false);
+        Member member = memberRepository.findBySocialId(socialResponseDto.getSocialId());
         String accessToken = jwtTokenProvider.generateAccessToken(member);
 
         return AuthResponseDto.builder()

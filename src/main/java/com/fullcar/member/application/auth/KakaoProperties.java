@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AppleProperties {
-    private String teamId;
-    private String keyId;
-    private String clientId;
-    private String audience;
-    private String privateKey;
+public class KakaoProperties {
+    private String adminKey;
 }
