@@ -4,6 +4,7 @@ import com.fullcar.carpool.application.carpool.CarpoolService;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.MyCarpoolDto;
 import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
@@ -17,12 +18,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @Tag(name = "[Carpool] 카풀 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/carpools")
+@RequestMapping("/api/v1")
 public class CarpoolController {
     private final CarpoolService carpoolService;
 
@@ -30,7 +32,7 @@ public class CarpoolController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "등록 성공")
     })
-    @PostMapping("")
+    @PostMapping("/carpools")
     public ApiResponse<CarpoolResponseDto> postCarpool(
             @Parameter(hidden = true)
             @CurrentMember Member member,
@@ -47,7 +49,7 @@ public class CarpoolController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
     })
-    @GetMapping("")
+    @GetMapping("/carpools")
     public ApiResponse<Slice<CarpoolResponseDto>> getCarpools(
             @Parameter(hidden = true)
             @CurrentMember Member member,
@@ -64,7 +66,7 @@ public class CarpoolController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
     })
-    @GetMapping("/{carpoolId}")
+    @GetMapping("/carpools/{carpoolId}")
     public ApiResponse<CarpoolResponseDto.CarpoolDetailDtO> getCarpool(
             @Parameter(hidden = true)
             @CurrentMember Member member,
@@ -73,6 +75,21 @@ public class CarpoolController {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
                 carpoolService.getCarpool(member, new CarpoolId(carpoolId))
+        );
+    }
+
+    @Operation(summary = "내 카풀 목록 조회 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping("/my-carpools")
+    public ApiResponse<List<MyCarpoolDto>> getMyCarpools(
+            @Parameter(hidden = true)
+            @CurrentMember Member member
+    ) {
+        return ApiResponse.success(
+                SuccessCode.READ_SUCCESS,
+                carpoolService.getMyCarpoolList(member)
         );
     }
 }

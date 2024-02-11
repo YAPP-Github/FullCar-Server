@@ -6,6 +6,7 @@ import com.fullcar.carpool.domain.carpool.Driver;
 import com.fullcar.carpool.domain.service.CarpoolIdService;
 import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.MyCarpoolDto;
 import com.fullcar.member.domain.car.Car;
 import com.fullcar.member.domain.member.Member;
 
@@ -50,6 +51,17 @@ public class CarpoolMapper {
                 .carName(car.getCarName())
                 .carBrand(car.getCarBrand())
                 .carColor(car.getCarColor())
+                .build();
+    }
+
+    public MyCarpoolDto toMyCarpoolDto(Carpool carpool, Member member) {
+        return MyCarpoolDto.builder()
+                .id(carpool.getCarpoolId().getId())
+                .pickupLocation(carpool.getPickupLocation())
+                .money(carpool.getCost().getMoney())
+                .periodType(carpool.getCost().getPeriodType())
+                .carpoolState(carpool.getCarpoolState())
+                .createdAt(carpool.getCreatedAt())
                 .build();
     }
 

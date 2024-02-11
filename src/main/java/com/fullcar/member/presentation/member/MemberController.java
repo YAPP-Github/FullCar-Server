@@ -9,6 +9,7 @@ import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.member.dto.request.*;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
+import com.fullcar.member.presentation.member.dto.response.OnBoardingResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,9 +33,9 @@ public class MemberController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/onboarding")
-    public ApiResponse<Object> postOnboarding(@CurrentMember Member member, @RequestBody @Valid OnboardingRequestDto onboardingRequestDto) {
-        memberService.registerOnboarding(member, onboardingRequestDto);
-        return ApiResponse.success(SuccessCode.REGISTER_SUCCESS);
+    public ApiResponse<OnBoardingResponseDto> postOnBoarding(@CurrentMember Member member, @RequestBody @Valid OnBoardingRequestDto onboardingRequestDto) {
+        OnBoardingResponseDto responseDto = memberService.registerOnBoarding(member, onboardingRequestDto);
+        return ApiResponse.success(SuccessCode.REGISTER_SUCCESS, responseDto);
     }
 
     @Operation(summary = "회원 정보 조회 API")
@@ -51,6 +52,7 @@ public class MemberController {
     @Operation(summary = "회사 메일 인증 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "인증메일 발송 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "블랙리스트에 있는 이메일 주소입니다.", content = @Content),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/onboarding/company/email")
@@ -62,6 +64,7 @@ public class MemberController {
     @Operation(summary = "닉네임 중복 검사 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "사용 가능한 닉네임"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "중복된 닉네임 입니다.", content = @Content),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/onboarding/nickname")

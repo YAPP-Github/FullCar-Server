@@ -82,11 +82,12 @@ public class Member {
         return this;
     }
 
-    public void saveOnBoardingInfo(Member member) {
+    public Member saveOnBoardingInfo(Member member) {
         this.email = member.getEmail();
         this.nickname = member.getNickname();
         this.gender = member.getGender();
         this.company = new Company(member.getCompany().getCompanyName(), member.getCompany().getLatitude(), member.getCompany().getLongitude());
+        return this;
     }
 
     public void clearRefreshTokenAndDeviceToken() {
