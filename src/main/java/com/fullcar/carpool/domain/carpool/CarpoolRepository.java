@@ -7,12 +7,14 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CarpoolRepository extends JpaRepository<Carpool, CarpoolId> {
     Optional<Carpool> findByCarpoolIdAndIsDeleted(CarpoolId carpoolId, boolean isDeleted);
     Slice<Carpool> findAllByIsDeletedOrderByCreatedAtDesc(boolean isDeleted, Pageable pageable);
+    List<Carpool> findAllByDriverAndIsDeletedOrderByCreatedAtDesc(Driver driver, boolean isDeleted);
 
     default Carpool findByCarpoolIdAndIsDeletedOrThrow(CarpoolId carpoolId, boolean isDeleted) {
         return findByCarpoolIdAndIsDeleted(carpoolId, isDeleted).orElseThrow(

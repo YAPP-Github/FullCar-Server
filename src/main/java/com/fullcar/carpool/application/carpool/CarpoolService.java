@@ -3,8 +3,10 @@ package com.fullcar.carpool.application.carpool;
 import com.fullcar.carpool.domain.carpool.Carpool;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
+import com.fullcar.carpool.domain.carpool.Driver;
 import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
+import com.fullcar.carpool.presentation.carpool.dto.response.MyCarpoolDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.car.Car;
@@ -62,5 +64,19 @@ public class CarpoolService {
                 orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_CAR));
 
         return carpoolMapper.toDetailDto(carpool, member, car);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyCarpoolDto> getMyCarpoolList(Member member) {
+        List<Carpool> carpools = carpoolRepository.findAllByDriverAndIsDeletedOrderByCreatedAtDesc(
+                Driver.builder()
+                .memberId(member.getId())
+                .build(),
+                false
+        );
+
+        return carpools.stream()
+                .map(carpool -> carpoolMapper.toMyCarpoolDto(carpool, member))
+                .toList();
     }
 }
