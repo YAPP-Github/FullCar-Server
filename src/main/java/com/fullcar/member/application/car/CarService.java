@@ -3,6 +3,7 @@ package com.fullcar.member.application.car;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.car.Car;
+import com.fullcar.member.domain.car.CarId;
 import com.fullcar.member.domain.car.CarRepository;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
@@ -48,5 +49,13 @@ public class CarService {
         Car car = carRepository.findByCarIdAndIsDeletedOrThrow(member.getCarId(), false);
         Car updatedCar = car.updateCar(carRequestDto);
         carRepository.saveAndFlush(updatedCar);
+    }
+
+    @Transactional
+    public void deleteCar(CarId carId) {
+        if (carRepository.existsByCarId(carId)) {
+            Car car = carRepository.findByCarIdAndIsDeletedOrThrow(carId, false);
+            carRepository.delete(car);
+        }
     }
 }

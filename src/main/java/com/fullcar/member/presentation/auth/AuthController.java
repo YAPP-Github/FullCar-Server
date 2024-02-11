@@ -13,6 +13,7 @@ import com.fullcar.member.presentation.auth.dto.request.KakaoAuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
+import com.fullcar.member.presentation.member.dto.request.WithdrawRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -83,5 +84,16 @@ public class AuthController {
     public ApiResponse<Object> socialLogout(@CurrentMember Member member) {
         authServiceProvider.socialLogout(member);
         return ApiResponse.success(SuccessCode.LOGOUT_SUCCESS);
+    }
+
+    @Operation(summary = "회원 탈퇴 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @DeleteMapping()
+    public ApiResponse<Object> withdrawMember(@CurrentMember Member member, @RequestBody WithdrawRequestDto withdrawRequestDto) throws IOException {
+        authServiceProvider.withdrawMember(member, withdrawRequestDto);
+        return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
     }
 }

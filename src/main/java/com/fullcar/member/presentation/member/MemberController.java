@@ -17,8 +17,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
@@ -82,16 +80,5 @@ public class MemberController {
     public ApiResponse<Object> checkMailAuthenticationCode(@CurrentMember Member member, @RequestBody CodeRequestDto codeRequestDto) {
         mailService.checkMailAuthenticationCode(member, codeRequestDto);
         return ApiResponse.success(SuccessCode.CODE_VERIFICATION_SUCCESS);
-    }
-
-    @Operation(summary = "회원 탈퇴 API")
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "탈퇴 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
-    })
-    @DeleteMapping()
-    public ApiResponse<Object> withdrawMember(@CurrentMember Member member, @RequestBody WithdrawRequestDto withdrawRequestDto) throws IOException {
-        memberService.withdrawMember(member, withdrawRequestDto);
-        return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
     }
 }

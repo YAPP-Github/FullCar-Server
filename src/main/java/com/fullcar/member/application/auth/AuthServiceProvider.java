@@ -4,40 +4,30 @@ import com.fullcar.core.config.jwt.JwtExceptionType;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.application.car.CarService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.domain.member.MemberSocialType;
+import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import jakarta.annotation.PostConstruct;
+import com.fullcar.member.presentation.member.dto.request.WithdrawRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
 public class AuthServiceProvider {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-
-//    private static final Map<MemberSocialType> authServiceMap = new HashMap<>();
-//
-//    private final KakaoAuthService kakaoAuthService;
-//    private final AppleAuthService appleAuthService;
-//
-//    @PostConstruct
-//    void initializeAuthServicesMap() {
-//        authServiceMap.put(MemberSocialType.APPLE);
-//        authServiceMap.put(MemberSocialType.KAKAO);
-//    }
-
-//    public AuthService getAuthService(MemberSocialType socialType) {
-//        return authServiceMap.get(socialType);
-//    }
+    private final AppleAuthService appleAuthService;
+    private final KakaoAuthService kakaoAuthService;
+    private final CarService carService;
+    private final MailService mailService;
 
     public AuthResponseDto socialLogin(SocialInfoResponseDto socialResponseDto) {
         Member member = memberRepository.findBySocialId(socialResponseDto.getSocialId());
@@ -69,5 +59,24 @@ public class AuthServiceProvider {
     public void socialLogout(Member member) {
         memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false).clearRefreshTokenAndDeviceToken();
         memberRepository.flush();
+    }
+
+    @Transactional
+    public void withdrawMember(Member member, WithdrawRequestDto withdrawRequestDto) throws IOException {
+        if (Objects.equals(withdrawRequestDto.getSocialType(), "APPLE")) {
+            appleAuthService.revoke(member);
+        }
+        else if (Objects.equals(withdrawRequestDto.getSocialType(), "KAKAO")) {
+            kakaoAuthService.revoke(member);
+        }
+        else {
+            throw new CustomException(ErrorCode.INVALID_MEMBER);
+        }
+
+        carService.deleteCar(member.getCarId());
+        mailService.deleteMail(member.getId());
+
+        memberRepository.saveAndFlush(member.deleted());
+
     }
 }
