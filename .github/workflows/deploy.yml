@@ -28,6 +28,8 @@ jobs:
           cd ./resources
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" | base64 --decode >> application.yml
+          touch ./private_key.p8
+          echo "${{ secrets.PRIVATE_KEY }}" | base64 --decode >> private_key.p8
           mkdir firebase
           cd ./firebase
           touch ./firebase_key.json
