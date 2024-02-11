@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OnboardingRequestDto {
+public class OnBoardingRequestDto {
 
     @Schema(description = "회사명", example = "구글 코리아")
     @NotBlank

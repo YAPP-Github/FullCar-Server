@@ -5,9 +5,10 @@ import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.domain.member.*;
 import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
-import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
+import com.fullcar.member.presentation.member.dto.request.OnBoardingRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
+import com.fullcar.member.presentation.member.dto.response.OnBoardingResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +34,10 @@ public class MemberService {
     }
 
     @Transactional
-    public void registerOnboarding(Member member, OnboardingRequestDto onboardingRequestDto) {
-        findByMemberId(member.getId()).saveOnBoardingInfo(memberMapper.toEntity(onboardingRequestDto));
+    public OnBoardingResponseDto registerOnBoarding(Member member, OnBoardingRequestDto onboardingRequestDto) {
+        Member updatedMember = findByMemberId(member.getId()).saveOnBoardingInfo(memberMapper.toEntity(onboardingRequestDto));
+        memberRepository.saveAndFlush(updatedMember);
+        return memberMapper.toOnBoardingDto(member);
     }
 
     @Transactional(readOnly = true)

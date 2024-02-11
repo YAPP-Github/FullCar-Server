@@ -4,8 +4,9 @@ import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.member.Company;
 import com.fullcar.member.domain.member.service.MemberIdService;
 import com.fullcar.member.domain.member.Member;
-import com.fullcar.member.presentation.member.dto.request.OnboardingRequestDto;
+import com.fullcar.member.presentation.member.dto.request.OnBoardingRequestDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
+import com.fullcar.member.presentation.member.dto.response.OnBoardingResponseDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,18 @@ public class MemberMapper {
                 .build();
     }
 
-    public Member toEntity(OnboardingRequestDto onboardingRequestDto) {
+    public OnBoardingResponseDto toOnBoardingDto(Member member) {
+        return OnBoardingResponseDto.builder()
+                .nickname(member.getNickname())
+                .companyName(member.getCompany().getCompanyName())
+                .latitude(member.getCompany().getLatitude())
+                .longitude(member.getCompany().getLongitude())
+                .email(member.getEmail())
+                .gender(member.getGender())
+                .build();
+    }
+
+    public Member toEntity(OnBoardingRequestDto onboardingRequestDto) {
         return Member.builder()
                 .company(
                         Company.builder()
