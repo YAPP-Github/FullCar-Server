@@ -11,7 +11,7 @@ import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.KakaoAuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,21 +30,20 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KakaoAuthService implements AuthService {
+public class KakaoAuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
     private final SocialIdService socialIdService;
     private final MemberMapper memberMapper;
 
-    @Override
     @Transactional
-    public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
-        String deviceToken = authRequestDto.getDeviceToken();
-        SocialId socialId = socialIdService.generateSocialId(getKakaoData(authRequestDto.getToken()));
+    public SocialInfoResponseDto getMemberInfo(KakaoAuthRequestDto kakaoAuthRequestDto) {
+        String deviceToken = kakaoAuthRequestDto.getDeviceToken();
+        SocialId socialId = socialIdService.generateSocialId(getKakaoData(kakaoAuthRequestDto.getToken()));
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
-        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
+        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialId(socialId).loginMember(deviceToken, refreshToken);
         else createMember(socialId, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
@@ -86,7 +85,7 @@ public class KakaoAuthService implements AuthService {
 
     // 새로운 멤버 생성
     private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        Member member = memberMapper.toLoginEntity(socialId, deviceToken, refreshToken);
+        Member member = memberMapper.toKakaoLoginEntity(socialId, deviceToken, refreshToken);
         memberRepository.saveAndFlush(member);
     }
 }
