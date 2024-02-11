@@ -13,7 +13,7 @@ import com.fullcar.member.presentation.auth.dto.request.KakaoAuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import com.fullcar.member.presentation.member.dto.request.WithdrawRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.WithdrawRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

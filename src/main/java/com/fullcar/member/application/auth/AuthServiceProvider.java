@@ -7,17 +7,17 @@ import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.car.CarService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
+import com.fullcar.member.domain.member.MemberSocialType;
 import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import com.fullcar.member.presentation.member.dto.request.WithdrawRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.WithdrawRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -63,20 +63,20 @@ public class AuthServiceProvider {
 
     @Transactional
     public void withdrawMember(Member member, WithdrawRequestDto withdrawRequestDto) throws IOException {
-        if (Objects.equals(withdrawRequestDto.getSocialType(), "APPLE")) {
+        if (withdrawRequestDto.getSocialType() == MemberSocialType.APPLE) {
             appleAuthService.revoke(member);
         }
-        else if (Objects.equals(withdrawRequestDto.getSocialType(), "KAKAO")) {
+        else if (withdrawRequestDto.getSocialType() == MemberSocialType.KAKAO) {
             kakaoAuthService.revoke(member);
         }
         else {
-            throw new CustomException(ErrorCode.INVALID_MEMBER);
+            throw new CustomException(ErrorCode.INVALID_SOCIAL_TYPE);
         }
 
         carService.deleteCar(member.getCarId());
         mailService.deleteMail(member.getId());
-
         memberRepository.saveAndFlush(member.deleted());
 
+        // TODO: 이벤트 기반으로 게시글 및 요청 처리
     }
 }

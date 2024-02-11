@@ -71,8 +71,6 @@ public class AppleAuthService {
     public SocialInfoResponseDto getMemberInfo(AppleAuthRequestDto appleAuthRequestDto) throws IOException {
         String deviceToken = appleAuthRequestDto.getDeviceToken();
         String idToken = appleAuthRequestDto.getIdToken();
-        AppleAuthTokenResponseDto responseDto = requestAppleAuthToken(appleAuthRequestDto.getAuthCode());
-        System.out.println(responseDto);
         String appleRefreshToken = requestAppleAuthToken(appleAuthRequestDto.getAuthCode()).getRefreshToken();
 
         Map<String, String> headers = parseHeaders(idToken);
@@ -194,7 +192,7 @@ public class AppleAuthService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expirationDate)
                 .setAudience("https://appleid.apple.com")
-                .setSubject("com.fullcar.app1")
+                .setSubject("com.fullcar.app")
                 .signWith(SignatureAlgorithm.ES256, getPrivateKey())
                 .compact();
     }
@@ -210,11 +208,13 @@ public class AppleAuthService {
     }
 
     public AppleAuthTokenResponseDto requestAppleAuthToken(String code) throws IOException {
-        try {
+        String secret = createClientSecret();
+        System.out.println(secret);
+
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
-        params.add("client_id", "com.fullcar.app1");
+        params.add("client_id", clientId);
         params.add("client_secret", createClientSecret());
         params.add("grant_type", "authorization_code");
 
@@ -223,13 +223,13 @@ public class AppleAuthService {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
-
+        try {
             ResponseEntity<AppleAuthTokenResponseDto> response = restTemplate.postForEntity(REQUEST_TOKEN_URL, httpEntity, AppleAuthTokenResponseDto.class);
             System.out.println(response.getBody());
             return response.getBody();
         } catch (Exception e) {
             System.out.println(e);
-            throw new IllegalArgumentException("what");
+            throw new IllegalArgumentException("Apple token error");
             //throw new CustomException(ErrorCode.FAILED_TO_GENERATE_APPLE_TOKEN);
         }
     }
