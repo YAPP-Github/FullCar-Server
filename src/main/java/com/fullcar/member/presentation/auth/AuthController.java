@@ -4,7 +4,7 @@ import com.fullcar.core.annotation.CurrentMember;
 import com.fullcar.core.response.ApiResponse;
 import com.fullcar.core.response.SuccessCode;
 import com.fullcar.member.application.auth.AppleAuthService;
-import com.fullcar.member.application.auth.AuthServiceProvider;
+import com.fullcar.member.application.auth.AuthService;
 import com.fullcar.member.application.auth.KakaoAuthService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.presentation.auth.dto.request.AppleAuthRequestDto;
@@ -30,7 +30,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Tag(name = "[Auth] 인증/인가 관련 API")
 public class AuthController {
-    private final AuthServiceProvider authServiceProvider;
+    private final AuthService authService;
     private final AppleAuthService appleAuthService;
     private final KakaoAuthService kakaoAuthService;
 
@@ -43,7 +43,7 @@ public class AuthController {
     @PostMapping("/login/apple")
     public ApiResponse<AuthResponseDto> appleLogin(@RequestBody AppleAuthRequestDto appleAuthRequestDto) throws IOException {
         SocialInfoResponseDto socialResponseDto = appleAuthService.getMemberInfo(appleAuthRequestDto);
-        AuthResponseDto responseDto = authServiceProvider.socialLogin(socialResponseDto);
+        AuthResponseDto responseDto = authService.socialLogin(socialResponseDto);
 
         return ApiResponse.success(SuccessCode.APPLE_LOGIN_SUCCESS, responseDto);
     }
@@ -57,7 +57,7 @@ public class AuthController {
     @PostMapping("/login/kakao")
     public ApiResponse<AuthResponseDto> kakaoLogin(@RequestBody KakaoAuthRequestDto kakaoAuthRequestDto) {
         SocialInfoResponseDto socialResponseDto = kakaoAuthService.getMemberInfo(kakaoAuthRequestDto);
-        AuthResponseDto responseDto = authServiceProvider.socialLogin(socialResponseDto);
+        AuthResponseDto responseDto = authService.socialLogin(socialResponseDto);
 
         return ApiResponse.success(SuccessCode.KAKAO_LOGIN_SUCCESS, responseDto);
     }
@@ -71,7 +71,7 @@ public class AuthController {
     @PostMapping("/token")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<AuthTokenResponseDto> getNewToken(@RequestBody AuthTokenRequestDto authTokenRequestDto) {
-        return ApiResponse.success(SuccessCode.GET_NEW_TOKEN_SUCCESS, authServiceProvider.getNewToken(authTokenRequestDto.getRefreshToken()));
+        return ApiResponse.success(SuccessCode.GET_NEW_TOKEN_SUCCESS, authService.getNewToken(authTokenRequestDto.getRefreshToken()));
     }
 
     @Operation(summary = "로그아웃 API")
@@ -82,7 +82,7 @@ public class AuthController {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Object> socialLogout(@CurrentMember Member member) {
-        authServiceProvider.socialLogout(member);
+        authService.socialLogout(member);
         return ApiResponse.success(SuccessCode.LOGOUT_SUCCESS);
     }
 
@@ -93,7 +93,7 @@ public class AuthController {
     })
     @DeleteMapping()
     public ApiResponse<Object> withdrawMember(@CurrentMember Member member, @RequestBody WithdrawRequestDto withdrawRequestDto) throws IOException {
-        authServiceProvider.withdrawMember(member, withdrawRequestDto);
+        authService.withdrawMember(member, withdrawRequestDto);
         return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
     }
 }
