@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     /* 400 BAD REQUEST */
     FAILED_TO_GENERATE_PUBLIC_KEY(BAD_REQUEST, "애플 공개키 생성 중 문제 발생"),
+    FAILED_TO_GENERATE_APPLE_TOKEN(BAD_REQUEST, "애플 access Token 생성 중 문제 발생"),
     EMAIL_ADDRESS_IN_BLACKLIST(BAD_REQUEST, "블랙리스트에 있는 이메일 주소입니다."),
     CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
@@ -22,6 +23,7 @@ public enum ErrorCode {
     INVALID_FORM_STATE(BAD_REQUEST, "유효하지 않은 신청서 상태입니다."),
     EXISTED_CODE_IN_MAIL(BAD_REQUEST, "이미 인증번호를 보냈습니다."),
     NOT_MATCHED_CODE(BAD_REQUEST, "인증번호가 일치하지 않습니다."),
+    INVALID_SOCIAL_TYPE(BAD_REQUEST, "유효하지 않은 소셜 로그인 타입 입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),

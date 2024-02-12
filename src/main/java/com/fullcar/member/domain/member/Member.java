@@ -56,6 +56,9 @@ public class Member {
     @Column(name = "device_token")
     private String deviceToken;
 
+    @Column(name = "apple_refresh_token")
+    private String appleRefreshToken;
+
     @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
@@ -64,7 +67,12 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public void saveAppleRefreshToken(String appleRefreshToken) {
+        this.appleRefreshToken = appleRefreshToken;
+    }
+
     public void loginMember(String deviceToken, String refreshToken) {
+        this.isDeleted = false;
         this.deviceToken = deviceToken;
         this.refreshToken = refreshToken;
     }
@@ -85,5 +93,16 @@ public class Member {
     public void clearRefreshTokenAndDeviceToken() {
         this.deviceToken = null;
         this.refreshToken = null;
+    }
+
+    public Member deleted() {
+        this.isDeleted = true;
+        this.deviceToken = null;
+        this.refreshToken = null;
+        this.carId = null;
+        this.company = null;
+        this.email = null;
+        this.gender = null;
+        return this;
     }
 }

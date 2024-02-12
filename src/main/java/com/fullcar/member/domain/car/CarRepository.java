@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface CarRepository extends JpaRepository<Car, CarId> {
     Optional<Car> findByCarIdAndIsDeleted(CarId carId, boolean isDeleted);
 
+    boolean existsByCarId(CarId carId);
+
     default Car findByCarIdAndIsDeletedOrThrow(CarId carId, boolean isDeleted) {
         return findByCarIdAndIsDeleted(carId, isDeleted)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_CAR));

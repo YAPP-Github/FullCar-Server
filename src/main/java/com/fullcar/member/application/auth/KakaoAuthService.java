@@ -11,17 +11,17 @@ import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.auth.service.SocialIdService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.presentation.auth.dto.request.AuthRequestDto;
+import com.fullcar.member.presentation.auth.dto.request.KakaoAuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -30,21 +30,23 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KakaoAuthService implements AuthService {
+public class KakaoAuthService {
+    @Value("${kakao.admin-key}")
+    private String adminKey;
+    private static final String KAKAO_UNLINK_ENDPOINT = "https://kapi.kakao.com/v1/user/unlink";
     private final JwtTokenProvider jwtTokenProvider;
 
     private final MemberRepository memberRepository;
     private final SocialIdService socialIdService;
     private final MemberMapper memberMapper;
 
-    @Override
     @Transactional
-    public SocialInfoResponseDto getMemberInfo(AuthRequestDto authRequestDto) {
-        String deviceToken = authRequestDto.getDeviceToken();
-        SocialId socialId = socialIdService.generateSocialId(getKakaoData(authRequestDto.getToken()));
+    public SocialInfoResponseDto getMemberInfo(KakaoAuthRequestDto kakaoAuthRequestDto) {
+        String deviceToken = kakaoAuthRequestDto.getDeviceToken();
+        SocialId socialId = socialIdService.generateSocialId(getKakaoData(kakaoAuthRequestDto.getToken()));
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
-        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialIdAndIsDeleted(socialId, false).loginMember(deviceToken, refreshToken);
+        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialId(socialId).loginMember(deviceToken, refreshToken);
         else createMember(socialId, deviceToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
@@ -86,7 +88,28 @@ public class KakaoAuthService implements AuthService {
 
     // 새로운 멤버 생성
     private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        Member member = memberMapper.toLoginEntity(socialId, deviceToken, refreshToken);
+        Member member = memberMapper.toKakaoLoginEntity(socialId, deviceToken, refreshToken);
         memberRepository.saveAndFlush(member);
+    }
+
+    // 회원 탈퇴
+    public void revoke(Member member) {
+        RestTemplate restTemplate = new RestTemplateBuilder().build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "KakaoAK " + adminKey);
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("target_id_type", "user_id");
+        map.add("target_id", member.getSocialId().toString());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+
+        restTemplate.exchange(
+                KAKAO_UNLINK_ENDPOINT,
+                HttpMethod.POST,
+                request,
+                String.class);
     }
 }

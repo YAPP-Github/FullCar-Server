@@ -4,8 +4,10 @@ import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.mail.MailMapper;
 import com.fullcar.member.domain.blacklist.BlacklistRepository;
+import com.fullcar.member.domain.mail.Mail;
 import com.fullcar.member.domain.mail.MailRepository;
 import com.fullcar.member.domain.member.Member;
+import com.fullcar.member.domain.member.MemberId;
 import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.member.dto.request.CodeRequestDto;
 import com.fullcar.member.presentation.member.dto.request.EmailRequestDto;
@@ -16,6 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -76,5 +79,12 @@ public class MailClient implements MailService {
         if (!Objects.equals(codeRequestDto.getCode(), code)) {
             throw new CustomException(ErrorCode.NOT_MATCHED_CODE);
         }
+    }
+
+    @Transactional
+    @Override
+    public void deleteMail(MemberId memberId) {
+        Mail mail = mailRepository.findByMemberId(memberId);
+        mailRepository.delete(mail);
     }
 }

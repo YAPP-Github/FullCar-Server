@@ -53,10 +53,20 @@ public class MemberMapper {
                 .build();
     }
 
-    public Member toLoginEntity(SocialId socialId, String deviceToken, String refreshToken) {
+    public Member toKakaoLoginEntity(SocialId socialId, String deviceToken, String refreshToken) {
         return Member.builder()
                 .id(memberIdService.nextId())
                 .socialId(socialId)
+                .deviceToken(deviceToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public Member toAppleLoginEntity(SocialId socialId, String appleRefreshToken, String deviceToken, String refreshToken) {
+        return Member.builder()
+                .id(memberIdService.nextId())
+                .socialId(socialId)
+                .appleRefreshToken(appleRefreshToken)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
                 .build();

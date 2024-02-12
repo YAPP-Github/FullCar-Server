@@ -4,44 +4,33 @@ import com.fullcar.core.config.jwt.JwtExceptionType;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.application.car.CarService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
 import com.fullcar.member.domain.member.MemberSocialType;
+import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
+import com.fullcar.member.presentation.auth.dto.request.WithdrawRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class AuthServiceProvider {
-    private static final Map<MemberSocialType, AuthService> authServiceMap = new HashMap<>();
-
-    private final KakaoAuthService kakaoAuthService;
-    private final AppleAuthService appleAuthService;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
-
-    @PostConstruct
-    void initializeAuthServicesMap() {
-        authServiceMap.put(MemberSocialType.KAKAO, kakaoAuthService);
-        authServiceMap.put(MemberSocialType.APPLE, appleAuthService);
-    }
-
-    public AuthService getAuthService(MemberSocialType socialType) {
-        return authServiceMap.get(socialType);
-    }
+    private final AppleAuthService appleAuthService;
+    private final KakaoAuthService kakaoAuthService;
+    private final CarService carService;
+    private final MailService mailService;
 
     public AuthResponseDto socialLogin(SocialInfoResponseDto socialResponseDto) {
-
-        Member member = memberRepository.findBySocialIdAndIsDeleted(socialResponseDto.getSocialId(), false);
+        Member member = memberRepository.findBySocialId(socialResponseDto.getSocialId());
         String accessToken = jwtTokenProvider.generateAccessToken(member);
 
         return AuthResponseDto.builder()
@@ -70,5 +59,24 @@ public class AuthServiceProvider {
     public void socialLogout(Member member) {
         memberRepository.findByIdAndIsDeletedOrThrow(member.getId(), false).clearRefreshTokenAndDeviceToken();
         memberRepository.flush();
+    }
+
+    @Transactional
+    public void withdrawMember(Member member, WithdrawRequestDto withdrawRequestDto) throws IOException {
+        if (withdrawRequestDto.getSocialType() == MemberSocialType.APPLE) {
+            appleAuthService.revoke(member);
+        }
+        else if (withdrawRequestDto.getSocialType() == MemberSocialType.KAKAO) {
+            kakaoAuthService.revoke(member);
+        }
+        else {
+            throw new CustomException(ErrorCode.INVALID_SOCIAL_TYPE);
+        }
+
+        carService.deleteCar(member.getCarId());
+        mailService.deleteMail(member.getId());
+        memberRepository.saveAndFlush(member.deleted());
+
+        // TODO: 이벤트 기반으로 게시글 및 요청 처리
     }
 }
