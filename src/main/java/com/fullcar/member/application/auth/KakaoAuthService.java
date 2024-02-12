@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.NotFoundException;
+import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.member.MemberMapper;
 import com.fullcar.member.domain.auth.SocialId;
@@ -16,7 +17,6 @@ import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -94,8 +94,7 @@ public class KakaoAuthService {
 
     // 회원 탈퇴
     public void revoke(Member member) {
-        RestTemplate restTemplate = new RestTemplateBuilder().build();
-
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "KakaoAK " + adminKey);
@@ -106,10 +105,14 @@ public class KakaoAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        restTemplate.exchange(
-                KAKAO_UNLINK_ENDPOINT,
-                HttpMethod.POST,
-                request,
-                String.class);
+        try {
+            restTemplate.exchange(
+                    KAKAO_UNLINK_ENDPOINT,
+                    HttpMethod.POST,
+                    request,
+                    String.class);
+        } catch (HttpClientErrorException e) {
+            throw new UnauthorizedException(ErrorCode.INVALID_KAKAO_USER);
+        }
     }
 }

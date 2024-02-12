@@ -32,6 +32,7 @@ public enum ErrorCode {
     INVALID_CLAIMS(UNAUTHORIZED, "올바르지 않은 Claim"),
     SIGNIN_REQUIRED(UNAUTHORIZED, "access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다."),
     INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저"),
+    INVALID_KAKAO_USER(UNAUTHORIZED, "이미 탈퇴되었거나 유효하지 않은 카카오 유저입니다."),
 
     /* 404 NOT FOUND */
     NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다."),
