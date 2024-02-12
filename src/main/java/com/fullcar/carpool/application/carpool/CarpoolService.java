@@ -4,6 +4,9 @@ import com.fullcar.carpool.domain.carpool.Carpool;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
 import com.fullcar.carpool.domain.carpool.Driver;
+import com.fullcar.carpool.domain.form.Form;
+import com.fullcar.carpool.domain.form.FormRepository;
+import com.fullcar.carpool.domain.service.CarpoolCloseService;
 import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.MyCarpoolDto;
@@ -29,7 +32,9 @@ import java.util.List;
 public class CarpoolService {
     private final CarpoolRepository carpoolRepository;
     private final CarRepository carRepository;  //:TODO Event 기반으로 변경
+    private final FormRepository formRepository;
     private final CarpoolMapper carpoolMapper;
+    private final CarpoolCloseService carpoolCloseService;
 
     @Transactional
     public CarpoolResponseDto registerCarpool(Member member, CarpoolRequestDto carpoolRequestDto) {
@@ -78,5 +83,20 @@ public class CarpoolService {
         return carpools.stream()
                 .map(carpool -> carpoolMapper.toMyCarpoolDto(carpool, member))
                 .toList();
+    }
+
+    @Transactional
+    public CarpoolResponseDto closeCarpool(Member member, CarpoolId carpoolId) {
+        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(carpoolId, false);
+
+        if (!carpool.isMyCarpool(member.getId())) {
+            throw new CustomException(ErrorCode.CANNOT_CLOSE_CARPOOL);
+        }
+        List<Form> forms = formRepository.findAllByCarpoolIdAndIsDeleted(carpoolId, false);
+
+        carpool = carpoolCloseService.closeCarpool(carpool);
+        forms = carpoolCloseService.rejectForms(forms);
+
+        return carpoolMapper.toDto(carpool, member);
     }
 }
