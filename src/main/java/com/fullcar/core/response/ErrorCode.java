@@ -22,7 +22,6 @@ public enum ErrorCode {
     INVALID_FORM_STATE(BAD_REQUEST, "유효하지 않은 신청서 상태입니다."),
     EXISTED_CODE_IN_MAIL(BAD_REQUEST, "이미 인증번호를 보냈습니다."),
     NOT_MATCHED_CODE(BAD_REQUEST, "인증번호가 일치하지 않습니다."),
-    INVALID_SOCIAL_TYPE(BAD_REQUEST, "유효하지 않은 소셜 로그인 타입 입니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),

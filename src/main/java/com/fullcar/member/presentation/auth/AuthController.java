@@ -37,6 +37,7 @@ public class AuthController {
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "애플 소셜 로그인 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "애플 공개키 생성 중 문제 발생", content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "애플 refresh Token 생성 중 문제 발생", content = @Content),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @PostMapping("/login/apple")
@@ -88,6 +89,7 @@ public class AuthController {
     @Operation(summary = "회원 탈퇴 API")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "이미 탈퇴 처리되었거나 유효하지 않은 카카오 유저입니다.", content = @Content),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @DeleteMapping()

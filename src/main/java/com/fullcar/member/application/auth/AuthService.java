@@ -68,9 +68,6 @@ public class AuthService {
         else if (member.getSocialType() == SocialType.KAKAO) {
             kakaoAuthService.revoke(member);
         }
-        else {
-            throw new CustomException(ErrorCode.INVALID_SOCIAL_TYPE);
-        }
 
         carService.deleteCar(member.getCarId());
         mailService.deleteMail(member.getId());
