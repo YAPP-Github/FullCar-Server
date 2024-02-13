@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullcar.core.config.jwt.JwtTokenProvider;
 import com.fullcar.core.exception.BadRequestException;
-import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.UnauthorizedException;
 import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.member.MemberMapper;
@@ -19,14 +18,12 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.bouncycastle.openssl.PEMParser;
@@ -58,8 +55,8 @@ public class AppleAuthService {
     @Value("${apple.client-id}")
     private String clientId;
 
-    private static final String REQUEST_TOKEN_URL = "https://appleid.apple.com/auth/oauth2/v2/token";
-    private static final String REVOKE_TOKEN_URL = "https://appleid.apple.com/auth/oauth2/v2/revoke";
+    private static final String REQUEST_TOKEN_URL = "https://appleid.apple.com/auth/token";
+    private static final String REVOKE_TOKEN_URL = "https://appleid.apple.com/auth/revoke";
 
     private final ObjectMapper objectMapper;
     private final JwtTokenProvider jwtTokenProvider;
@@ -192,7 +189,7 @@ public class AppleAuthService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expirationDate)
                 .setAudience("https://appleid.apple.com")
-                .setSubject("com.fullcar.app")
+                .setSubject(clientId)
                 .signWith(SignatureAlgorithm.ES256, getPrivateKey())
                 .compact();
     }
@@ -208,10 +205,7 @@ public class AppleAuthService {
     }
 
     public AppleAuthTokenResponseDto requestAppleAuthToken(String code) throws IOException {
-        String secret = createClientSecret();
-        System.out.println(secret);
-
-        RestTemplate restTemplate = new RestTemplateBuilder().build();
+        RestTemplate restTemplate = new RestTemplate();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("client_id", clientId);
@@ -225,18 +219,15 @@ public class AppleAuthService {
 
         try {
             ResponseEntity<AppleAuthTokenResponseDto> response = restTemplate.postForEntity(REQUEST_TOKEN_URL, httpEntity, AppleAuthTokenResponseDto.class);
-            System.out.println(response.getBody());
             return response.getBody();
         } catch (Exception e) {
-            System.out.println(e);
-            throw new IllegalArgumentException("Apple token error");
-            //throw new CustomException(ErrorCode.FAILED_TO_GENERATE_APPLE_TOKEN);
+            throw new UnauthorizedException(ErrorCode.FAILED_TO_GENERATE_APPLE_REFRESH_TOKEN);
         }
     }
 
     // 회원 탈퇴
     public void revoke(Member member) throws IOException {
-        RestTemplate restTemplate = new RestTemplateBuilder().build();
+        RestTemplate restTemplate = new RestTemplate();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("client_id", clientId);

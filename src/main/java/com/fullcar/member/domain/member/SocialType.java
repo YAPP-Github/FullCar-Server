@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public enum MemberSocialType {
+public enum SocialType {
     KAKAO,
     APPLE
 }

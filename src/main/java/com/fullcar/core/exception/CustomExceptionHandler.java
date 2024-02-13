@@ -18,4 +18,14 @@ public class CustomExceptionHandler {
                 .message(e.getMessage())
                 .build();
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiResponse<Object> handleUnauthorizedException(UnauthorizedException e) {
+
+        return ApiResponse.builder()
+                .status(401)
+                .message(e.getMessage())
+                .build();
+    }
 }
