@@ -84,7 +84,9 @@ public class MailClient implements MailService {
     @Transactional
     @Override
     public void deleteMail(MemberId memberId) {
-        Mail mail = mailRepository.findByMemberId(memberId);
-        mailRepository.delete(mail);
+        if (mailRepository.existsByMemberId(memberId)) {
+            Mail mail = mailRepository.findByMemberId(memberId);
+            mailRepository.delete(mail);
+        }
     }
 }

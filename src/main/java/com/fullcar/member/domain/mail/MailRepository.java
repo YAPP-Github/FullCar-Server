@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MailRepository extends JpaRepository<Mail, MailId> {
     Mail findByMemberId(MemberId memberId);
+    boolean existsByMemberId(MemberId memberId);
 }
