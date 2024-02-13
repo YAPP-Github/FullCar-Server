@@ -13,7 +13,6 @@ import com.fullcar.member.presentation.auth.dto.request.KakaoAuthRequestDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import com.fullcar.member.presentation.auth.dto.request.WithdrawRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -92,8 +91,8 @@ public class AuthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
     })
     @DeleteMapping()
-    public ApiResponse<Object> withdrawMember(@CurrentMember Member member, @RequestBody WithdrawRequestDto withdrawRequestDto) throws IOException {
-        authService.withdrawMember(member, withdrawRequestDto);
+    public ApiResponse<Object> withdrawMember(@CurrentMember Member member) throws IOException {
+        authService.withdrawMember(member);
         return ApiResponse.success(SuccessCode.WITHDRAW_SUCCESS);
     }
 }

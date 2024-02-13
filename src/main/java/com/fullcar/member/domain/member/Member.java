@@ -34,6 +34,9 @@ public class Member {
 
     private SocialId socialId;
 
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
     @Embedded
     private Company company;
 

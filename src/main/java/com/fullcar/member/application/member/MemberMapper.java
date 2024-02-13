@@ -2,6 +2,7 @@ package com.fullcar.member.application.member;
 
 import com.fullcar.member.domain.auth.SocialId;
 import com.fullcar.member.domain.member.Company;
+import com.fullcar.member.domain.member.SocialType;
 import com.fullcar.member.domain.member.service.MemberIdService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.presentation.member.dto.request.OnBoardingRequestDto;
@@ -59,6 +60,7 @@ public class MemberMapper {
                 .socialId(socialId)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
+                .socialType(SocialType.KAKAO)
                 .build();
     }
 
@@ -69,6 +71,7 @@ public class MemberMapper {
                 .appleRefreshToken(appleRefreshToken)
                 .deviceToken(deviceToken)
                 .refreshToken(refreshToken)
+                .socialType(SocialType.APPLE)
                 .build();
     }
 }

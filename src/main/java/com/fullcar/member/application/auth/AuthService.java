@@ -7,12 +7,11 @@ import com.fullcar.core.response.ErrorCode;
 import com.fullcar.member.application.car.CarService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.MemberRepository;
-import com.fullcar.member.domain.member.MemberSocialType;
+import com.fullcar.member.domain.member.SocialType;
 import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.auth.dto.response.AuthResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.AuthTokenResponseDto;
 import com.fullcar.member.presentation.auth.dto.response.SocialInfoResponseDto;
-import com.fullcar.member.presentation.auth.dto.request.WithdrawRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,11 +61,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void withdrawMember(Member member, WithdrawRequestDto withdrawRequestDto) throws IOException {
-        if (withdrawRequestDto.getSocialType() == MemberSocialType.APPLE) {
+    public void withdrawMember(Member member) throws IOException {
+        if (member.getSocialType() == SocialType.APPLE) {
             appleAuthService.revoke(member);
         }
-        else if (withdrawRequestDto.getSocialType() == MemberSocialType.KAKAO) {
+        else if (member.getSocialType() == SocialType.KAKAO) {
             kakaoAuthService.revoke(member);
         }
         else {
