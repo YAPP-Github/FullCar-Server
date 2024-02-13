@@ -13,7 +13,6 @@ public enum ErrorCode {
 
     /* 400 BAD REQUEST */
     FAILED_TO_GENERATE_PUBLIC_KEY(BAD_REQUEST, "애플 공개키 생성 중 문제 발생"),
-    FAILED_TO_GENERATE_APPLE_TOKEN(BAD_REQUEST, "애플 access Token 생성 중 문제 발생"),
     EMAIL_ADDRESS_IN_BLACKLIST(BAD_REQUEST, "블랙리스트에 있는 이메일 주소입니다."),
     CANNOT_SEND_TO_OWN_CARPOOL(BAD_REQUEST, "자기자신의 카풀에는 신청할 수 없습니다."),
     DUPLICATED_FORM(BAD_REQUEST, "이미 요청을 보낸 카풀입니다."),
@@ -32,7 +31,8 @@ public enum ErrorCode {
     INVALID_CLAIMS(UNAUTHORIZED, "올바르지 않은 Claim"),
     SIGNIN_REQUIRED(UNAUTHORIZED, "access, refreshToken 모두 만료되었습니다. 재로그인이 필요합니다."),
     INVALID_MEMBER(UNAUTHORIZED, "유효하지 않은 유저"),
-    INVALID_KAKAO_USER(UNAUTHORIZED, "이미 탈퇴되었거나 유효하지 않은 카카오 유저입니다."),
+    INVALID_KAKAO_USER(UNAUTHORIZED, "이미 탈퇴 처리되었거나 유효하지 않은 카카오 유저입니다."),
+    FAILED_TO_GENERATE_APPLE_REFRESH_TOKEN(UNAUTHORIZED, "애플 refresh Token 생성 중 문제 발생"),
 
     /* 404 NOT FOUND */
     NOT_EXIST_USER(NOT_FOUND, "존재하지 않는 사용자입니다."),

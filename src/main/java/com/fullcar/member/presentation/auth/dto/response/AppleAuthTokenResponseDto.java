@@ -1,12 +1,13 @@
 package com.fullcar.member.presentation.auth.dto.response;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AppleAuthTokenResponseDto {
-    private String accessToken;
-    private Integer expiresIn;
-    private String idToken;
+    @JsonProperty("refresh_token")
     private String refreshToken;
-    private String tokenType;
 }
