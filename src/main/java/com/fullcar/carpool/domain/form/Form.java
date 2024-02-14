@@ -1,13 +1,17 @@
 package com.fullcar.carpool.domain.form;
 
 import com.fullcar.carpool.domain.carpool.CarpoolId;
+import com.fullcar.carpool.domain.form.event.FormStateChangedEvent;
+import com.fullcar.carpool.infra.dto.NotificationDto;
 import com.fullcar.carpool.presentation.form.dto.request.FormUpdateDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
+import com.fullcar.member.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -19,8 +23,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "form")
-public class Form {
-    private static final String REJECT_MESSAGE = "카풀 매칭에 실패했어요. 다른 카풀을 찾아보세요!";
+public class Form extends AbstractAggregateRoot<Form> {
 
     @EmbeddedId
     private FormId formId;
@@ -60,32 +63,50 @@ public class Form {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void changeFormState(FormUpdateDto formUpdateDto) {
+    public void changeFormState(FormUpdateDto formUpdateDto, Member passenger) {
         FormState formState = formUpdateDto.getFormState();
 
         if (formState == FormState.ACCEPT) {
-            this.accept(formUpdateDto.getContact(), formUpdateDto.getToPassenger());
+            this.accept(formUpdateDto.getContact(), formUpdateDto.getToPassenger(), passenger);
         }
         else if (formState == FormState.REJECT) {
-            this.reject();
+            this.reject(passenger);
         }
         else {
             throw new CustomException(ErrorCode.INVALID_FORM_STATE);
         }
     }
 
-    public void accept(String contact, String toPassenger) {
+    public void accept(String contact, String toPassenger, Member passenger) {
         this.formState = FormState.ACCEPT;
         this.resultMessage = ResultMessage.builder()
                 .contact(contact)
                 .toPassenger(toPassenger)
                 .build();
+
+        registerEvent(new FormStateChangedEvent(
+                NotificationDto.builder()
+                        .nickName(passenger.getNickname())
+                        .deviceToken(passenger.getDeviceToken())
+                        .title(FormMessage.ACCEPT_TITLE.getMessage())
+                        .body(FormMessage.ACCEPT_BODY.getMessage())
+                        .build()
+        ));
     }
 
-    public void reject() {
+    public void reject(Member passenger) {
         this.formState = FormState.REJECT;
         this.resultMessage = ResultMessage.builder()
-                .toPassenger(REJECT_MESSAGE)
+                .toPassenger(FormMessage.REJECT_MESSAGE.getMessage())
                 .build();
+
+        registerEvent(new FormStateChangedEvent(
+                NotificationDto.builder()
+                        .nickName(passenger.getNickname())
+                        .deviceToken(passenger.getDeviceToken())
+                        .title(FormMessage.REJECT_TITLE.getMessage())
+                        .body(FormMessage.REJECT_BODY.getMessage())
+                        .build()
+        ));
     }
 }

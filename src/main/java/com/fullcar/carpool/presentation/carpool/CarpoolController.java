@@ -92,4 +92,20 @@ public class CarpoolController {
                 carpoolService.getMyCarpoolList(member)
         );
     }
+
+    @Operation(summary = "카풀 마감 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공")
+    })
+    @PatchMapping("/carpools/{carpoolId}")
+    public ApiResponse<CarpoolResponseDto.CarpoolDetailDtO> patchCarpool(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @PathVariable Long carpoolId
+    ) {
+        return ApiResponse.success(
+                SuccessCode.UPDATE_SUCCESS,
+                carpoolService.closeCarpool(member, new CarpoolId(carpoolId))
+        );
+    }
 }
