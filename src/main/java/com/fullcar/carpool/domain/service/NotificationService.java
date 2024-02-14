@@ -1,8 +1,9 @@
 package com.fullcar.carpool.domain.service;
 
+import com.fullcar.carpool.infra.dto.NotificationDto;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface NotificationService {
-    void sendNotification(String nickname, String deviceToken, String title, String body);
+    void sendNotification(NotificationDto notificationDto);
 }
