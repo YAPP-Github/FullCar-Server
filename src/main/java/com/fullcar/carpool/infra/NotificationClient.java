@@ -1,6 +1,7 @@
 package com.fullcar.carpool.infra;
 
 import com.fullcar.carpool.domain.service.NotificationService;
+import com.fullcar.carpool.infra.dto.NotificationDto;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.response.ErrorCode;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -17,14 +18,14 @@ public class NotificationClient implements NotificationService {
     private final FirebaseMessaging firebaseMessaging;
 
     @Override
-    public void sendNotification(String nickname, String deviceToken, String title, String body) {
+    public void sendNotification(NotificationDto notificationDto) {
         Notification notification = Notification.builder()
-                .setTitle(nickname + "님! " + title)
-                .setBody(body)
+                .setTitle(notificationDto.getNickName() + "님! " + notificationDto.getTitle())
+                .setBody(notificationDto.getBody())
                 .build();
 
         Message message = Message.builder()
-                .setToken(deviceToken)
+                .setToken(notificationDto.getDeviceToken())
                 .setNotification(notification)
                 .build();
 

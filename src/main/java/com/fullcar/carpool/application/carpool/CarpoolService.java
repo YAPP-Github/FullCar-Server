@@ -4,6 +4,9 @@ import com.fullcar.carpool.domain.carpool.Carpool;
 import com.fullcar.carpool.domain.carpool.CarpoolId;
 import com.fullcar.carpool.domain.carpool.CarpoolRepository;
 import com.fullcar.carpool.domain.carpool.Driver;
+import com.fullcar.carpool.domain.form.Form;
+import com.fullcar.carpool.domain.form.FormRepository;
+import com.fullcar.carpool.domain.form.FormState;
 import com.fullcar.carpool.presentation.carpool.dto.request.CarpoolRequestDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.CarpoolResponseDto;
 import com.fullcar.carpool.presentation.carpool.dto.response.MyCarpoolDto;
@@ -13,6 +16,7 @@ import com.fullcar.member.domain.car.Car;
 import com.fullcar.member.domain.car.CarRepository;
 import com.fullcar.member.domain.member.Member;
 
+import com.fullcar.member.domain.member.MemberRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -29,6 +33,8 @@ import java.util.List;
 public class CarpoolService {
     private final CarpoolRepository carpoolRepository;
     private final CarRepository carRepository;  //:TODO Event 기반으로 변경
+    private final MemberRepository memberRepository; //:TODO Event 기반으로 변경
+    private final FormRepository formRepository;
     private final CarpoolMapper carpoolMapper;
 
     @Transactional
@@ -78,5 +84,35 @@ public class CarpoolService {
         return carpools.stream()
                 .map(carpool -> carpoolMapper.toMyCarpoolDto(carpool, member))
                 .toList();
+    }
+
+    @Transactional
+    public CarpoolResponseDto.CarpoolDetailDtO closeCarpool(Member member, CarpoolId carpoolId) {
+        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(carpoolId, false);
+        Car car = carRepository.findByCarIdAndIsDeletedOrThrow(member.getCarId(), false);
+
+        if (!carpool.isMyCarpool(member.getId())) {
+            throw new CustomException(ErrorCode.CANNOT_CLOSE_CARPOOL);
+        }
+        List<Form> forms = formRepository.findAllByCarpoolIdAndIsDeleted(carpoolId, false);
+
+        carpool.close();
+
+        for (Form form: forms) {
+            if (form.getFormState() == FormState.REQUEST) {
+                form.reject(
+                        memberRepository.findByIdAndIsDeletedOrThrow(
+                                form.getPassenger().getMemberId(),
+                                false
+                        )
+                );
+            }
+
+        } // TODO: N+1 문제 개선 필요.
+
+        carpoolRepository.save(carpool);
+        formRepository.saveAllAndFlush(forms);
+
+        return carpoolMapper.toDetailDto(carpool, member, car);
     }
 }

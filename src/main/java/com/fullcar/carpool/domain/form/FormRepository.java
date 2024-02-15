@@ -23,6 +23,8 @@ public interface FormRepository extends JpaRepository<Form, FormId> {
             @Param("memberId") Long memberId
     );
 
+    List<Form> findAllByCarpoolIdAndIsDeleted(CarpoolId carpoolId, boolean isDeleted);
+
     default Form findByFormIdAndIsDeletedOrThrow(FormId formId, boolean isDeleted) {
         return findByFormIdAndIsDeleted(formId, isDeleted).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_EXIST_FORM)

@@ -58,4 +58,8 @@ public class Carpool {
     public boolean isMyCarpool(MemberId memberId) {
         return this.getDriver().getMemberId().getId().equals(memberId.getId());
     }
+
+    public void close() {
+        this.carpoolState = CarpoolState.CLOSE;
+    }
 }
