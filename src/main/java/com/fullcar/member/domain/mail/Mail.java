@@ -25,4 +25,8 @@ public class Mail {
     private MemberId memberId;
 
     private Integer code;
+
+    public void updateEmailCode(Integer code) {
+        this.code = code;
+    }
 }
