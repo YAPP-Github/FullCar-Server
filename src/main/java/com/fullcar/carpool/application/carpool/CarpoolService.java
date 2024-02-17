@@ -99,7 +99,7 @@ public class CarpoolService {
         carpool.close();
 
         for (Form form: forms) {
-            if (form.getFormState() == FormState.REQUEST) {
+            if (form.getFormState() == FormState.REQUEST) {  //TODO: Carpool 비즈니스 로직이기 때문에 도메인 내부로 들어가야함. CarpoolClosedEvent 도입 필요.
                 form.reject(
                         memberRepository.findByIdAndIsDeletedOrThrow(
                                 form.getPassenger().getMemberId(),

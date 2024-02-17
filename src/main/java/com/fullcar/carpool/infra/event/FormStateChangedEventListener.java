@@ -2,7 +2,6 @@ package com.fullcar.carpool.infra.event;
 
 import com.fullcar.carpool.domain.form.event.FormStateChangedEvent;
 import com.fullcar.carpool.domain.service.NotificationService;
-import com.fullcar.carpool.infra.dto.NotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @EnableAsync
-public class NotificationEventListener {
+public class FormStateChangedEventListener {
     private final NotificationService notificationService;
 
     @Async
