@@ -20,12 +20,12 @@ public class NotificationClient implements NotificationService {
     @Override
     public void sendNotification(NotificationDto notificationDto) {
         Notification notification = Notification.builder()
-                .setTitle(notificationDto.getNickName() + "님! " + notificationDto.getTitle())
+                .setTitle(notificationDto.getMember().getNickname() + "님! " + notificationDto.getTitle())
                 .setBody(notificationDto.getBody())
                 .build();
 
         Message message = Message.builder()
-                .setToken(notificationDto.getDeviceToken())
+                .setToken(notificationDto.getMember().getDeviceToken())
                 .setNotification(notification)
                 .build();
 
