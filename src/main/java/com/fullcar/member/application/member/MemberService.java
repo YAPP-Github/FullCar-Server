@@ -41,7 +41,7 @@ public class MemberService {
     public OnBoardingResponseDto registerOnBoarding(Member member, OnBoardingRequestDto onboardingRequestDto) {
         Member updatedMember = findByMemberId(member.getId()).saveOnBoardingInfo(memberMapper.toEntity(onboardingRequestDto));
         memberRepository.saveAndFlush(updatedMember);
-        return memberMapper.toOnBoardingDto(member);
+        return memberMapper.toOnBoardingDto(updatedMember);
     }
 
     @Transactional(readOnly = true)
