@@ -21,7 +21,8 @@ public enum SuccessCode {
     AVAILABLE_NICKNAME(OK, "사용 가능한 닉네임"),
     UPDATE_SUCCESS(OK, "수정 성공"),
     CODE_VERIFICATION_SUCCESS(OK, "인증 성공"),
-    WITHDRAW_SUCCESS(OK, "탈퇴 성공");
+    WITHDRAW_SUCCESS(OK, "탈퇴 성공"),
+    SAVE_DEVICE_TOKEN_SUCCESS(OK, "디바이스 토큰 등록 성공");
 
     private final HttpStatus status;
     private final String message;

@@ -2,6 +2,7 @@ package com.fullcar.member.domain.member;
 
 import com.fullcar.member.domain.car.CarId;
 import com.fullcar.member.domain.auth.SocialId;
+import com.fullcar.member.presentation.member.dto.request.DeviceTokenRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -105,6 +106,11 @@ public class Member {
         this.company = null;
         this.email = null;
         this.gender = null;
+        return this;
+    }
+
+    public Member saveDeviceToken(DeviceTokenRequestDto deviceTokenRequestDto) {
+        this.deviceToken = deviceTokenRequestDto.getDeviceToken();
         return this;
     }
 }
