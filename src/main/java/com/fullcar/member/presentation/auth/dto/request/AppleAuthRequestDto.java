@@ -16,7 +16,4 @@ public class AppleAuthRequestDto {
 
     @Schema(description = "id_token", example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDUyMzQ2NjMsImV4cCI6MTcwNTIzNDg0MywibWVtYmVySWQiOiJjb20uZnVsbGNhci5tZW1iZXIuZG9tYWluLk1lbWJlcklkQDQ5ODRlODM3In0.Qf8uXvaWR9K_pD4jgZlnkFpcx2-zlRKENXJhGXkMGSs")
     private String idToken;
-
-    @Schema(description = "디바이스 토큰")
-    private String deviceToken;
 }
