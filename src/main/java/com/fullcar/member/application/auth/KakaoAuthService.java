@@ -42,12 +42,11 @@ public class KakaoAuthService {
 
     @Transactional
     public SocialInfoResponseDto getMemberInfo(KakaoAuthRequestDto kakaoAuthRequestDto) {
-        String deviceToken = kakaoAuthRequestDto.getDeviceToken();
         SocialId socialId = socialIdService.generateSocialId(getKakaoData(kakaoAuthRequestDto.getToken()));
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
-        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialId(socialId).loginMember(deviceToken, refreshToken);
-        else createMember(socialId, deviceToken, refreshToken);
+        if (memberRepository.existsBySocialId(socialId)) memberRepository.findBySocialId(socialId).loginMember(refreshToken);
+        else createMember(socialId, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(socialId)
@@ -87,8 +86,8 @@ public class KakaoAuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(SocialId socialId, String deviceToken, String refreshToken) {
-        Member member = memberMapper.toKakaoLoginEntity(socialId, deviceToken, refreshToken);
+    private void createMember(SocialId socialId, String refreshToken) {
+        Member member = memberMapper.toKakaoLoginEntity(socialId, refreshToken);
         memberRepository.saveAndFlush(member);
     }
 

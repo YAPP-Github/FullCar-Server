@@ -74,9 +74,8 @@ public class Member {
         this.appleRefreshToken = appleRefreshToken;
     }
 
-    public void loginMember(String deviceToken, String refreshToken) {
+    public void loginMember(String refreshToken) {
         this.isDeleted = false;
-        this.deviceToken = deviceToken;
         this.refreshToken = refreshToken;
     }
 
