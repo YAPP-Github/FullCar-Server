@@ -7,6 +7,7 @@ import com.fullcar.member.application.member.MemberService;
 import com.fullcar.member.domain.member.Member;
 import com.fullcar.member.domain.member.service.MailService;
 import com.fullcar.member.presentation.member.dto.request.*;
+import com.fullcar.member.presentation.member.dto.response.DeviceTokenResponseDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
 import com.fullcar.member.presentation.member.dto.response.OnBoardingResponseDto;
@@ -83,5 +84,16 @@ public class MemberController {
     public ApiResponse<Object> checkMailAuthenticationCode(@CurrentMember Member member, @RequestBody CodeRequestDto codeRequestDto) {
         mailService.checkMailAuthenticationCode(member, codeRequestDto);
         return ApiResponse.success(SuccessCode.CODE_VERIFICATION_SUCCESS);
+    }
+
+    @Operation(summary = "디바이스 토큰 등록 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "디바이스 토큰 등록 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "서버 내부 오류", content = @Content)
+    })
+    @PostMapping("/device-token")
+    public ApiResponse<DeviceTokenResponseDto> postDeviceToken(@CurrentMember Member member, @RequestBody DeviceTokenRequestDto deviceTokenRequestDto) {
+        DeviceTokenResponseDto responseDto = memberService.postDeviceToken(member, deviceTokenRequestDto);
+        return ApiResponse.success(SuccessCode.SAVE_DEVICE_TOKEN_SUCCESS, responseDto);
     }
 }

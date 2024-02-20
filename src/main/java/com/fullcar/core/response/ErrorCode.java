@@ -23,7 +23,6 @@ public enum ErrorCode {
     CANNOT_CLOSE_CARPOOL(BAD_REQUEST, "카풀마감 권한이 없습니다."),
     CANNOT_DELETE_CARPOOL(BAD_REQUEST, "카풀삭제 권한이 없습니다."),
     INVALID_FORM_STATE(BAD_REQUEST, "유효하지 않은 신청서 상태입니다."),
-    EXISTED_CODE_IN_MAIL(BAD_REQUEST, "이미 인증번호를 보냈습니다."),
     NOT_MATCHED_CODE(BAD_REQUEST, "인증번호가 일치하지 않습니다."),
     ALREADY_CLOSED(BAD_REQUEST, "이미 마감된 카풀입니다."),
     CANNOT_DELETE_OPEN_CARPOOL(BAD_REQUEST, "모집중인 카풀은 삭제할 수 없습니다."),

@@ -66,7 +66,6 @@ public class AppleAuthService {
 
     @Transactional
     public SocialInfoResponseDto getMemberInfo(AppleAuthRequestDto appleAuthRequestDto) throws IOException {
-        String deviceToken = appleAuthRequestDto.getDeviceToken();
         String idToken = appleAuthRequestDto.getIdToken();
         String appleRefreshToken = requestAppleAuthToken(appleAuthRequestDto.getAuthCode()).getRefreshToken();
 
@@ -84,9 +83,9 @@ public class AppleAuthService {
         if (memberRepository.existsBySocialId(socialId)) {
             Member member = memberRepository.findBySocialId(socialId);
             member.saveAppleRefreshToken(appleRefreshToken);
-            member.loginMember(deviceToken, refreshToken);
+            member.loginMember(refreshToken);
         }
-        else createMember(socialId, appleRefreshToken, deviceToken, refreshToken);
+        else createMember(socialId, appleRefreshToken, refreshToken);
 
         return SocialInfoResponseDto.builder()
                 .socialId(socialId)
@@ -95,8 +94,8 @@ public class AppleAuthService {
     }
 
     // 새로운 멤버 생성
-    private void createMember(SocialId socialId, String authCode, String deviceToken, String refreshToken) {
-        Member member = memberMapper.toAppleLoginEntity(socialId, authCode, deviceToken, refreshToken);
+    private void createMember(SocialId socialId, String authCode, String refreshToken) {
+        Member member = memberMapper.toAppleLoginEntity(socialId, authCode, refreshToken);
         memberRepository.saveAndFlush(member);
     }
 

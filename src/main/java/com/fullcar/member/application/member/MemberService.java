@@ -3,13 +3,11 @@ package com.fullcar.member.application.member;
 import com.fullcar.core.exception.CustomException;
 import com.fullcar.core.exception.NotFoundException;
 import com.fullcar.core.response.ErrorCode;
-import com.fullcar.member.application.auth.AppleAuthService;
-import com.fullcar.member.application.auth.KakaoAuthService;
-import com.fullcar.member.domain.car.CarRepository;
-import com.fullcar.member.domain.mail.MailRepository;
 import com.fullcar.member.domain.member.*;
+import com.fullcar.member.presentation.member.dto.request.DeviceTokenRequestDto;
 import com.fullcar.member.presentation.member.dto.request.NicknameRequestDto;
 import com.fullcar.member.presentation.member.dto.request.OnBoardingRequestDto;
+import com.fullcar.member.presentation.member.dto.response.DeviceTokenResponseDto;
 import com.fullcar.member.presentation.member.dto.response.MemberGetResponseDto;
 import com.fullcar.member.presentation.member.dto.response.NicknameResponseDto;
 import com.fullcar.member.presentation.member.dto.response.OnBoardingResponseDto;
@@ -41,7 +39,7 @@ public class MemberService {
     public OnBoardingResponseDto registerOnBoarding(Member member, OnBoardingRequestDto onboardingRequestDto) {
         Member updatedMember = findByMemberId(member.getId()).saveOnBoardingInfo(memberMapper.toEntity(onboardingRequestDto));
         memberRepository.saveAndFlush(updatedMember);
-        return memberMapper.toOnBoardingDto(member);
+        return memberMapper.toOnBoardingDto(updatedMember);
     }
 
     @Transactional(readOnly = true)
@@ -58,5 +56,14 @@ public class MemberService {
                     .nickname(nicknameRequestDto.getNickname())
                     .build();
         }
+    }
+
+    @Transactional
+    public DeviceTokenResponseDto postDeviceToken(Member member, DeviceTokenRequestDto deviceTokenRequestDto) {
+        memberRepository.saveAndFlush(member.saveDeviceToken(deviceTokenRequestDto));
+
+        return DeviceTokenResponseDto.builder()
+                .deviceToken(deviceTokenRequestDto.getDeviceToken())
+                .build();
     }
 }

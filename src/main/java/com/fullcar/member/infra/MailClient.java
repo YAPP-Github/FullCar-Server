@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Random;
 
 @Service
+//@Component
 @RequiredArgsConstructor
 public class MailClient implements MailService {
     private final BlacklistRepository blacklistRepository;
@@ -41,10 +42,13 @@ public class MailClient implements MailService {
         String emailDomain = email.substring(email.lastIndexOf("@")+1);
         blacklistRepository.findByEmailThrow(emailDomain);
 
-        if (mailRepository.findByMemberId(member.getId()) != null) {
-            throw new CustomException(ErrorCode.EXISTED_CODE_IN_MAIL);
+        Mail mail = mailRepository.findByMemberId(member.getId());
+        if (mail != null) {
+            mail.updateEmailCode(authNum);
         }
-        mailRepository.saveAndFlush(mailMapper.toEntity(member, authNum));
+        else {
+            mailRepository.saveAndFlush(mailMapper.toEntity(member, authNum));
+        }
 
         EmailMessage emailMessage = mailMapper.toMessageEntity(emailRequestDto);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
