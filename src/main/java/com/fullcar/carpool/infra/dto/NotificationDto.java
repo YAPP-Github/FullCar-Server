@@ -1,5 +1,6 @@
 package com.fullcar.carpool.infra.dto;
 
+import com.fullcar.member.domain.member.Member;
 import lombok.*;
 
 @Getter
@@ -7,9 +8,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationDto {
-    private String nickName;
-
-    private String deviceToken;
+    private Member member;
 
     private String title;
 

@@ -31,6 +31,15 @@ public class FormMapper {
     }
 
     public FormResponseDto.FormDetailDto toDetailDto(Form form, Member member) {
+        Long carpoolId;
+
+        if (form.getCarpoolId() != null) {
+            carpoolId = form.getCarpoolId().getId();
+        }
+        else {
+            carpoolId = null;
+        }
+
         return FormResponseDto.FormDetailDto.builder()
                 .id(form.getFormId().getId())
                 .pickupLocation(form.getPickupLocation())
@@ -42,7 +51,7 @@ public class FormMapper {
                 .createdAt(form.getCreatedAt())
                 .content(form.getContent())
                 .resultMessage(form.getResultMessage())
-                .carpoolId(form.getCarpoolId().getId())
+                .carpoolId(carpoolId)
                 .build();
     }
 

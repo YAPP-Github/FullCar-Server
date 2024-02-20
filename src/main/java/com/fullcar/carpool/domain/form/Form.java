@@ -63,50 +63,52 @@ public class Form extends AbstractAggregateRoot<Form> {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public void changeFormState(FormUpdateDto formUpdateDto, Member passenger) {
+    public void changeFormState(FormUpdateDto formUpdateDto) {
         FormState formState = formUpdateDto.getFormState();
 
         if (formState == FormState.ACCEPT) {
-            this.accept(formUpdateDto.getContact(), formUpdateDto.getToPassenger(), passenger);
+            this.accept(formUpdateDto.getContact(), formUpdateDto.getToPassenger());
         }
         else if (formState == FormState.REJECT) {
-            this.reject(passenger);
+            this.reject();
         }
         else {
             throw new CustomException(ErrorCode.INVALID_FORM_STATE);
         }
     }
 
-    public void accept(String contact, String toPassenger, Member passenger) {
+    public void accept(String contact, String toPassenger) {
         this.formState = FormState.ACCEPT;
         this.resultMessage = ResultMessage.builder()
                 .contact(contact)
                 .toPassenger(toPassenger)
                 .build();
 
-        registerEvent(new FormStateChangedEvent(
-                NotificationDto.builder()
-                        .nickName(passenger.getNickname())
-                        .deviceToken(passenger.getDeviceToken())
+        registerEvent(
+                FormStateChangedEvent.builder()
+                        .memberId(this.passenger.getMemberId())
                         .title(FormMessage.ACCEPT_TITLE.getMessage())
                         .body(FormMessage.ACCEPT_BODY.getMessage())
                         .build()
-        ));
+        );
     }
 
-    public void reject(Member passenger) {
+    public void reject() {
         this.formState = FormState.REJECT;
         this.resultMessage = ResultMessage.builder()
                 .toPassenger(FormMessage.REJECT_MESSAGE.getMessage())
                 .build();
 
-        registerEvent(new FormStateChangedEvent(
-                NotificationDto.builder()
-                        .nickName(passenger.getNickname())
-                        .deviceToken(passenger.getDeviceToken())
+        registerEvent(
+                FormStateChangedEvent.builder()
+                        .memberId(this.passenger.getMemberId())
                         .title(FormMessage.REJECT_TITLE.getMessage())
                         .body(FormMessage.REJECT_BODY.getMessage())
                         .build()
-        ));
+        );
+    }
+
+    public void disconnectCarpool() {
+        this.carpoolId = null;
     }
 }

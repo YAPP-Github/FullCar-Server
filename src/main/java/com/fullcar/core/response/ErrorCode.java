@@ -20,9 +20,12 @@ public enum ErrorCode {
     DUPLICATED_NICKNAME(BAD_REQUEST, "중복된 닉네임 입니다."),
     EXISTED_CAR_IN_MEMBER(BAD_REQUEST, "이미 차량이 등록되었습니다."),
     CANNOT_CHANGE_FORM_STATE(BAD_REQUEST, "카풀에 등록된 운전자만 신청서 수락/거절을 할 수 있습니다."),
-    CANNOT_CLOSE_CARPOOL(BAD_REQUEST, "삭제 권한이 없습니다."),
+    CANNOT_CLOSE_CARPOOL(BAD_REQUEST, "카풀마감 권한이 없습니다."),
+    CANNOT_DELETE_CARPOOL(BAD_REQUEST, "카풀삭제 권한이 없습니다."),
     INVALID_FORM_STATE(BAD_REQUEST, "유효하지 않은 신청서 상태입니다."),
     NOT_MATCHED_CODE(BAD_REQUEST, "인증번호가 일치하지 않습니다."),
+    ALREADY_CLOSED(BAD_REQUEST, "이미 마감된 카풀입니다."),
+    CANNOT_DELETE_OPEN_CARPOOL(BAD_REQUEST, "모집중인 카풀은 삭제할 수 없습니다."),
 
     /* 401 UNAUTHORIZED */
     UNAUTHORIZED_KAKAO_TOKEN(UNAUTHORIZED, "유효하지 않은 카카오 토큰"),

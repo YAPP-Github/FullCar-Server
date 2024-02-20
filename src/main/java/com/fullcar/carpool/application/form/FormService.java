@@ -64,14 +64,11 @@ public class FormService {
         Form form = formMapper.toEntity(member, carpoolId, formRequestDto);
 
         eventPublisher.publishEvent(
-                new FormStateChangedEvent(
-                        NotificationDto.builder()
-                                .nickName(driver.getNickname())
-                                .deviceToken(driver.getDeviceToken())
-                                .title(FormMessage.REQUEST_TITLE.getMessage())
-                                .body(FormMessage.REQUEST_BODY.getMessage())
-                                .build()
-                )
+                FormStateChangedEvent.builder()
+                        .memberId(driver.getId())
+                        .title(FormMessage.REQUEST_TITLE.getMessage())
+                        .body(FormMessage.REQUEST_BODY.getMessage())
+                        .build()
         );
 
         return formMapper.toDto(
@@ -114,14 +111,13 @@ public class FormService {
     @Transactional
     public FormResponseDto.FormDetailDto updateForm(Member member, FormId formId, FormUpdateDto formUpdateDto) {
         Form form = formRepository.findByFormIdAndIsDeletedOrThrow(formId, false);
-        Member passenger = memberRepository.findByIdAndIsDeletedOrThrow(form.getPassenger().getMemberId(), false);
         Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(form.getCarpoolId(), false);
 
         if (!carpool.isMyCarpool(member.getId())) {
             throw new CustomException(ErrorCode.CANNOT_CHANGE_FORM_STATE);
         }
 
-        form.changeFormState(formUpdateDto, passenger);
+        form.changeFormState(formUpdateDto);
 
         return formMapper.toDetailDto(
                 formRepository.saveAndFlush(form),

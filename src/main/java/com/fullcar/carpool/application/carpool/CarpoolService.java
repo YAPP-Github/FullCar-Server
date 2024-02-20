@@ -96,23 +96,26 @@ public class CarpoolService {
         }
         List<Form> forms = formRepository.findAllByCarpoolIdAndIsDeleted(carpoolId, false);
 
-        carpool.close();
+        carpool.close(forms);
 
-        for (Form form: forms) {
-            if (form.getFormState() == FormState.REQUEST) {
-                form.reject(
-                        memberRepository.findByIdAndIsDeletedOrThrow(
-                                form.getPassenger().getMemberId(),
-                                false
-                        )
-                );
-            }
-
-        } // TODO: N+1 문제 개선 필요.
-
-        carpoolRepository.save(carpool);
-        formRepository.saveAllAndFlush(forms);
+        carpoolRepository.saveAndFlush(carpool);
 
         return carpoolMapper.toDetailDto(carpool, member, car);
+    }
+
+    @Transactional
+    public CarpoolResponseDto deleteCarpool(Member member, CarpoolId carpoolId) {
+        Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(carpoolId, false);
+
+        if (!carpool.isMyCarpool(member.getId())) {
+            throw new CustomException(ErrorCode.CANNOT_DELETE_CARPOOL);
+        }
+        List<Form> forms = formRepository.findAllByCarpoolIdAndIsDeleted(carpoolId, false);
+
+        carpool.delete(forms);
+
+        carpoolRepository.saveAndFlush(carpool);
+
+        return carpoolMapper.toDto(carpool, member);
     }
 }
