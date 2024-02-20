@@ -107,4 +107,8 @@ public class Form extends AbstractAggregateRoot<Form> {
                         .build()
         );
     }
+
+    public void disconnectCarpool() {
+        this.carpoolId = null;
+    }
 }

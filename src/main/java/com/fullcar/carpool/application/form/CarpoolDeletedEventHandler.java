@@ -1,9 +1,9 @@
 package com.fullcar.carpool.application.form;
 
-
-import com.fullcar.carpool.domain.carpool.event.CarpoolClosedEvent;
+import com.fullcar.carpool.domain.carpool.event.CarpoolDeletedEvent;
 import com.fullcar.carpool.domain.form.Form;
 import com.fullcar.carpool.domain.form.FormRepository;
+import com.fullcar.carpool.domain.form.FormState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,21 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CarpoolClosedEventHandler {
+public class CarpoolDeletedEventHandler {
     private final FormRepository formRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void rejectForms(CarpoolClosedEvent carpoolClosedEvent) {
-        log.info("CarpoolClosedEvent received");
-        List<Form> forms = carpoolClosedEvent.getForms();
+    public void rejectForms(CarpoolDeletedEvent carpoolDeletedEvent) {
+        log.info("CarpoolDeletedEvent received");
+        List<Form> forms = carpoolDeletedEvent.getForms();
 
-        forms.forEach(Form::reject);
+        for (Form form: forms) {
+            if (form.getFormState() == FormState.REQUEST || form.getFormState() == FormState.ACCEPT) {
+                form.reject();
+            }
+            form.disconnectCarpool();
+        }
         formRepository.saveAllAndFlush(forms);
     }
 }

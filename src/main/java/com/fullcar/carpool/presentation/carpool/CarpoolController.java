@@ -108,4 +108,20 @@ public class CarpoolController {
                 carpoolService.closeCarpool(member, new CarpoolId(carpoolId))
         );
     }
+
+    @Operation(summary = "카풀 삭제 API")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "삭제 성공")
+    })
+    @DeleteMapping("/carpools/{carpoolId}")
+    public ApiResponse<CarpoolResponseDto> deleteCarpool(
+            @Parameter(hidden = true)
+            @CurrentMember Member member,
+            @PathVariable Long carpoolId
+    ) {
+        return ApiResponse.success(
+                SuccessCode.DELETE_SUCCESS,
+                carpoolService.deleteCarpool(member, new CarpoolId(carpoolId))
+        );
+    }
 }

@@ -1,6 +1,7 @@
 package com.fullcar.carpool.domain.carpool;
 
 import com.fullcar.carpool.domain.carpool.event.CarpoolClosedEvent;
+import com.fullcar.carpool.domain.carpool.event.CarpoolDeletedEvent;
 import com.fullcar.carpool.domain.form.Form;
 import com.fullcar.carpool.domain.form.FormState;
 import com.fullcar.core.exception.CustomException;
@@ -77,6 +78,17 @@ public class Carpool extends AbstractAggregateRoot<Carpool> {
                                 .filter(form -> form.getFormState() == FormState.REQUEST)
                                 .toList()
                 )
+        );
+    }
+
+    public void delete(List<Form> forms) {
+        if (this.carpoolState == CarpoolState.OPEN) {
+            throw new CustomException(ErrorCode.CANNOT_DELETE_OPEN_CARPOOL);
+        }
+
+        this.isDeleted = true;
+        registerEvent(
+                new CarpoolDeletedEvent(forms)
         );
     }
 }

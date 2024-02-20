@@ -22,6 +22,7 @@ public class FormStateChangedEventHandler {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendNotification(FormStateChangedEvent formStateChangedEvent) {
+        log.info("FormStateChangedEvent received");
         notificationService.sendNotification(
                 NotificationDto.builder()
                 .member(
