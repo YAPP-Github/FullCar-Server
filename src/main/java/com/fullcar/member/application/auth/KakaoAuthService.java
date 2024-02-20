@@ -98,11 +98,11 @@ public class KakaoAuthService {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "KakaoAK " + adminKey);
 
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         map.add("target_id_type", "user_id");
-        map.add("target_id", member.getSocialId().toString());
+        map.add("target_id", Long.valueOf(member.getSocialId().getSocialId()));
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, headers);
 
         try {
             restTemplate.exchange(
