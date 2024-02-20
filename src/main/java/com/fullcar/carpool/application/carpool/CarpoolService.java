@@ -96,17 +96,9 @@ public class CarpoolService {
         }
         List<Form> forms = formRepository.findAllByCarpoolIdAndIsDeleted(carpoolId, false);
 
-        carpool.close();
+        carpool.close(forms);
 
-        for (Form form: forms) {
-            if (form.getFormState() == FormState.REQUEST) {  //TODO: Carpool 비즈니스 로직이기 때문에 도메인 내부로 들어가야함. CarpoolClosedEvent 도입 필요.
-                form.reject();
-            }
-
-        } // TODO: N+1 문제 개선 필요.
-
-        carpoolRepository.save(carpool);
-        formRepository.saveAllAndFlush(forms);
+        carpoolRepository.saveAndFlush(carpool);
 
         return carpoolMapper.toDetailDto(carpool, member, car);
     }
