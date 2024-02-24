@@ -51,14 +51,12 @@ public class CarpoolController {
     })
     @GetMapping("/carpools")
     public ApiResponse<Slice<CarpoolResponseDto>> getCarpools(
-            @Parameter(hidden = true)
-            @CurrentMember Member member,
             @RequestParam int page,
             @RequestParam int size
             ) {
         return ApiResponse.success(
                 SuccessCode.READ_SUCCESS,
-                carpoolService.getCarpoolList(member, page, size)
+                carpoolService.getCarpoolList(page, size)
         );
     }
 

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +34,6 @@ public class FormService {
     private  final CarpoolRepository carpoolRepository;
     private final MemberRepository memberRepository; //TODO: Event 기반으로 변경 필요.
     private final FormMapper formMapper;
-    private final NotificationService notificationService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -79,14 +79,21 @@ public class FormService {
 
     @Transactional(readOnly = true)
     public List<FormResponseDto> readSentFormList(Member member) {
-        return formRepository.findAllByPassengerAndIsDeletedOrderByCreatedAtDesc(
+        List<Form> forms = formRepository.findAllByPassengerAndIsDeletedOrderByCreatedAtDesc(
                 Passenger.builder()
                         .memberId(member.getId())
                         .build(),
-                false
-        ).stream()
-                .map(form -> formMapper.toDto(form, member))
-                .toList();
+                false);
+
+        List<FormResponseDto> formResponseDtos = new ArrayList<>();
+
+        for (Form form: forms) {
+            Carpool carpool = carpoolRepository.findByCarpoolIdAndIsDeletedOrThrow(form.getCarpoolId(), false);
+            Member driver = memberRepository.findByIdAndIsDeletedOrThrow(carpool.getDriver().getMemberId(), false);
+            formResponseDtos.add(formMapper.toDto(form, driver));
+        }
+
+        return formResponseDtos;
     }
 
     @Transactional(readOnly = true)

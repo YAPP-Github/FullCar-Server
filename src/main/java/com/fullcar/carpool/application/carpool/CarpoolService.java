@@ -48,14 +48,18 @@ public class CarpoolService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<CarpoolResponseDto> getCarpoolList(Member member, int page, int size) {
+    public Slice<CarpoolResponseDto> getCarpoolList(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
         Slice<Carpool> carpools = carpoolRepository.findAllByIsDeletedOrderByCreatedAtDesc(false, pageRequest);
 
         List<CarpoolResponseDto> carpoolResponseDtos = carpools.getContent().stream()
-                .map(carpool -> carpoolMapper.toDto(carpool, member))
+                .map(carpool -> carpoolMapper.toDto(
+                        carpool,
+                        memberRepository.findByIdAndIsDeletedOrThrow(carpool.getDriver().getMemberId(), false)
+                        )
+                )
                 .toList();
 
         return new SliceImpl<>(carpoolResponseDtos, carpools.getPageable(), carpools.hasNext());
